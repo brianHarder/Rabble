@@ -1,0 +1,9 @@
+{% extends "rabble/base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <p>Welcome {{user}}!</p>
+{% else %}
+    <p>Welcome to Rabble!</p>
+{% endif %}
+{% endblock content %}

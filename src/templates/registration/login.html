@@ -1,0 +1,29 @@
+{% extends "rabble/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+  <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4 text-rabble">Login to Rabble</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div class="mb-3">
+          <label for="id_username" class="form-label">Username</label>
+          <input type="text" name="username" autofocus required id="id_username"
+                 class="form-control rabble-input">
+        </div>
+
+        <div class="mb-3">
+          <label for="id_password" class="form-label">Password</label>
+          <input type="password" name="password" required id="id_password"
+                 class="form-control rabble-input">
+        </div>
+
+        <button type="submit" class="btn btn-login w-100">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

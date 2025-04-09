@@ -1,0 +1,60 @@
+:root {
+    --rabble-primary: #d9381e; /* fire red */
+    --rabble-accent: #ff8c42;  /* flame orange */
+    --rabble-dark: #2e2e2e;
+}
+
+body {
+    background-color: #fdf6f0;
+}
+
+.navbar {
+    background-color: var(--rabble-primary);
+}
+
+.navbar-brand {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    color: #fff !important;
+}
+
+.btn-login {
+    border-radius: 999px;
+    padding: 0.5rem 1.25rem;
+    background-color: var(--rabble-accent);
+    border: none;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #ff6a00;
+}
+
+.main-content {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(217, 56, 30, 0.1);
+    padding: 2.5rem;
+}
+
+/* Additional styles for forms */
+
+.rabble-input {
+    border-radius: 0.5rem;
+    border: 1px solid #ddd;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.rabble-input:focus {
+    border-color: var(--rabble-primary);
+    box-shadow: 0 0 0 0.2rem rgba(217, 56, 30, 0.25);
+}
+
+.text-rabble {
+    color: var(--rabble-primary);
+}
