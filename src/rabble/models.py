@@ -3,11 +3,11 @@ from django.contrib.auth.models import AbstractUser
 
 class Rabble(models.Model):
     community_id = models.TextField(unique=True)
-    subrabble_id = models.IntegerField()
+    subrabble_id = models.IntegerField()  # should be foreign? or not needed?
     chat_id = models.IntegerField()
 
 class SubRabble(models.Model):
-    community_id = models.TextField()
+    subrabble_community_id = models.TextField()
     allow_anonymous = models.BooleanField()
     description = models.TextField()
     privacy = models.BooleanField()
@@ -32,12 +32,12 @@ class Interest(models.Model):
 
 class Message(models.Model):
     text = models.TextField()
-    timestamp = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField()
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    chat_id = models.ForeignKey(Chat, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ['user', 'chat']
+        unique_together = ['user_id', 'chat_id']
 
 class Post(models.Model):
     title = models.TextField(blank=True, null=True)
