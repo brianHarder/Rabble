@@ -1,0 +1,262 @@
+[
+{
+    "model": "rabble.rabble",
+    "pk": 1,
+    "fields": {
+        "community_id": "default",
+        "owner": 2
+    }
+},
+{
+    "model": "rabble.subrabble",
+    "pk": 1,
+    "fields": {
+        "subrabble_community_id": "cs-courses",
+        "subrabble_name": "CS Courses",
+        "description": "A place to discuss CS courses",
+        "allow_anonymous": true,
+        "private": false,
+        "rabble_id": 1
+    }
+},
+{
+    "model": "rabble.subrabble",
+    "pk": 2,
+    "fields": {
+        "subrabble_community_id": "python",
+        "subrabble_name": "Python SubRabble",
+        "description": "A place to discuss python",
+        "allow_anonymous": true,
+        "private": false,
+        "rabble_id": 1
+    }
+},
+{
+    "model": "rabble.subrabble",
+    "pk": 3,
+    "fields": {
+        "subrabble_community_id": "web-dev",
+        "subrabble_name": "Web Development",
+        "description": "A place to discuss web development",
+        "allow_anonymous": true,
+        "private": false,
+        "rabble_id": 1
+    }
+},
+{
+    "model": "rabble.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$KB3RKYSHsUKrAwdpJoh1t4$X+mKR2XSR2YuhJF7Ja+TgbSO8+eR9yptqNtduEy9B5Q=",
+        "last_login": "2025-04-16T17:04:10.115Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "admin@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-04-08T18:32:46.320Z",
+        "bio": null,
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": [],
+        "follows": [],
+        "invites": [],
+        "joined_rabbles": [],
+        "joined_subrabbles": [],
+        "added_to_chat": [],
+        "interested_in": []
+    }
+},
+{
+    "model": "rabble.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$Pi3uZuCcH4w9eeyR2e3Rfi$YooQtiKHaHUPxx95dt0Vw67kyc6KhWPCiYzRmf8uikE=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "sam",
+        "first_name": "Sam",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-04-23T21:19:30Z",
+        "bio": "",
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": [],
+        "follows": [],
+        "invites": [],
+        "joined_rabbles": [],
+        "joined_subrabbles": [],
+        "added_to_chat": [],
+        "interested_in": []
+    }
+},
+{
+    "model": "rabble.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$Pi3uZuCcH4w9eeyR2e3Rfi$YooQtiKHaHUPxx95dt0Vw67kyc6KhWPCiYzRmf8uikE=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "alex",
+        "first_name": "Alex",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-04-23T21:19:55Z",
+        "bio": "",
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": [],
+        "follows": [],
+        "invites": [],
+        "joined_rabbles": [],
+        "joined_subrabbles": [],
+        "added_to_chat": [],
+        "interested_in": []
+    }
+},
+{
+    "model": "rabble.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$Pi3uZuCcH4w9eeyR2e3Rfi$YooQtiKHaHUPxx95dt0Vw67kyc6KhWPCiYzRmf8uikE=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "chris",
+        "first_name": "Chris",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-04-23T21:20:03Z",
+        "bio": "",
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": [],
+        "follows": [],
+        "invites": [],
+        "joined_rabbles": [],
+        "joined_subrabbles": [],
+        "added_to_chat": [],
+        "interested_in": []
+    }
+},
+{
+    "model": "rabble.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$Pi3uZuCcH4w9eeyR2e3Rfi$YooQtiKHaHUPxx95dt0Vw67kyc6KhWPCiYzRmf8uikE=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "morgan",
+        "first_name": "Morgan",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-04-23T21:20:11Z",
+        "bio": "",
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": [],
+        "follows": [],
+        "invites": [],
+        "joined_rabbles": [],
+        "joined_subrabbles": [],
+        "added_to_chat": [],
+        "interested_in": []
+    }
+},
+{
+    "model": "rabble.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$Pi3uZuCcH4w9eeyR2e3Rfi$YooQtiKHaHUPxx95dt0Vw67kyc6KhWPCiYzRmf8uikE=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "drew",
+        "first_name": "Drew",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-04-23T21:20:17Z",
+        "bio": "",
+        "profile_picture": "",
+        "groups": [],
+        "user_permissions": [],
+        "follows": [],
+        "invites": [],
+        "joined_rabbles": [],
+        "joined_subrabbles": [],
+        "added_to_chat": [],
+        "interested_in": []
+    }
+},
+{
+    "model": "rabble.post",
+    "pk": 1,
+    "fields": {
+        "title": "CS 141 review",
+        "body": "I think CS141 is a great introduction to Python",
+        "user_id": 3,
+        "subrabble_id": 1
+    }
+},
+{
+    "model": "rabble.post",
+    "pk": 2,
+    "fields": {
+        "title": "CS 142 review",
+        "body": "more of CS 142 should have been devoted to the project",
+        "user_id": 3,
+        "subrabble_id": 1
+    }
+},
+{
+    "model": "rabble.post",
+    "pk": 3,
+    "fields": {
+        "title": "CS 144 review",
+        "body": "The flipped classroom in CS 144 threw me off guard",
+        "user_id": 4,
+        "subrabble_id": 1
+    }
+},
+{
+    "model": "rabble.comment",
+    "pk": 1,
+    "fields": {
+        "parent_id": null,
+        "user_id": 6,
+        "post_id": 1,
+        "text": "I had a great time in 141"
+    }
+},
+{
+    "model": "rabble.comment",
+    "pk": 2,
+    "fields": {
+        "parent_id": null,
+        "user_id": 5,
+        "post_id": 1,
+        "text": "I thought 142 was a better class overall"
+    }
+},
+{
+    "model": "rabble.comment",
+    "pk": 3,
+    "fields": {
+        "parent_id": null,
+        "user_id": 2,
+        "post_id": 1,
+        "text": "141 really made me want to do CS"
+    }
+}
+]

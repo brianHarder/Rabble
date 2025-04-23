@@ -3,14 +3,14 @@ from django.contrib.auth.models import AbstractUser
 
 class Rabble(models.Model):
     community_id = models.TextField(unique=True)
-    subrabble_id = models.IntegerField()  # should be foreign? or not needed?
-    chat_id = models.IntegerField()
+    owner = models.ForeignKey('User', on_delete=models.CASCADE)
 
 class SubRabble(models.Model):
-    subrabble_community_id = models.TextField()
-    allow_anonymous = models.BooleanField()
+    subrabble_community_id = models.TextField(unique=True)
+    subrabble_name = models.CharField(max_length=200)
     description = models.TextField()
-    privacy = models.BooleanField()
+    allow_anonymous = models.BooleanField()
+    private = models.BooleanField()
     rabble_id = models.ForeignKey(Rabble, on_delete=models.CASCADE)
 
 class Chat(models.Model):
@@ -20,12 +20,12 @@ class User(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(blank=True, null=True)
 
-    follows = models.ManyToManyField('self', symmetrical=False, related_name='followers')
-    invites = models.ManyToManyField('self', symmetrical=False, related_name='invitations')
-    joined_rabbles = models.ManyToManyField(Rabble)
-    joined_subrabbles = models.ManyToManyField(SubRabble)
-    added_to_chat = models.ManyToManyField(Chat)
-    interested_in = models.ManyToManyField('Interest')
+    follows = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
+    invites = models.ManyToManyField('self', symmetrical=False, related_name='invitations', blank=True)
+    joined_rabbles = models.ManyToManyField(Rabble, blank=True)
+    joined_subrabbles = models.ManyToManyField(SubRabble, blank=True)
+    added_to_chat = models.ManyToManyField(Chat, blank=True)
+    interested_in = models.ManyToManyField('Interest', blank=True)
 
 class Interest(models.Model):
     name = models.TextField(unique=True)
@@ -45,15 +45,15 @@ class Post(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subrabble_id = models.ForeignKey(SubRabble, on_delete=models.CASCADE)
 
-    post_likes = models.ManyToManyField(User, through='PostLike', related_name="liked_posts")
+    post_likes = models.ManyToManyField(User, through='PostLike', related_name="liked_posts", blank=True)
 
 class Comment(models.Model):
-    parent_id = models.IntegerField()
+    parent_id = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField()
 
-    comment_likes = models.ManyToManyField(User, through='CommentLike', related_name="liked_comments")
+    comment_likes = models.ManyToManyField(User, through='CommentLike', related_name="liked_comments", blank=True)
 
 class PostLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
