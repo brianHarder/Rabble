@@ -40,7 +40,7 @@ class Message(models.Model):
         unique_together = ['user_id', 'chat_id']
 
 class Post(models.Model):
-    title = models.TextField(blank=True, null=True)
+    title = models.TextField()
     body = models.TextField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subrabble_id = models.ForeignKey(SubRabble, on_delete=models.CASCADE)

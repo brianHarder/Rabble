@@ -1,0 +1,44 @@
+{% extends "rabble/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <a href="{% url 'subrabble-detail' subrabble.subrabble_community_id %}" class="text-decoration-none text-muted">
+        ← Back to !{{ subrabble.subrabble_community_id }} — {{ subrabble.subrabble_name }}
+    </a>
+</div>
+
+<div class="mb-4">
+    <h2>{{ post.title }}</h2>
+    <p class="text-muted">By {{ post.user_id.username }}</p>
+    <p>{{ post.body }}</p>
+
+    <div class="d-flex justify-content-start align-items-center gap-3 mt-4">
+        <span>👍 {{ post.post_likes.count }}</span>
+        <span>💬 {{ post.comment_set.count }}</span>
+        <a href="{% url 'post-edit' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
+            Edit Post
+        </a>
+    </div>
+</div>
+
+<hr>
+
+<h4>Comments</h4>
+
+{% if post.comment_set.count > 0 %}
+    <ul class="list-group mb-3">
+        {% for comment in post.comment_set.all %}
+            <li class="list-group-item">
+                <p>{{ comment.text }}</p>
+                <div class="d-flex justify-content-between">
+                    <small class="text-muted">By {{ comment.user_id.username }}</small>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No comments yet. Be the first to comment!</p>
+{% endif %}
+{% endblock %}

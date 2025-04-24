@@ -9,7 +9,7 @@
             <strong>!{{ sr.subrabble_community_id }}</strong> — {{ sr.subrabble_name }}<br>
             <small class="text-muted">{{ sr.description }}</small>
           </div>
-          <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+          <a href="{% url 'subrabble-detail' sr.subrabble_community_id %}" class="btn btn-sm btn-outline-primary">View</a>
         </li>
       {% endfor %}
     </ul>
