@@ -17,9 +17,11 @@
     <div class="d-flex justify-content-start align-items-center gap-3 mt-4">
         <span>👍 {{ post.post_likes.count }}</span>
         <span>💬 {{ post.comment_set.count }}</span>
+        {% if user.is_authenticated and user == post.user_id %}
         <a href="{% url 'post-edit' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
             Edit Post
         </a>
+        {% endif %}
     </div>
 </div>
 

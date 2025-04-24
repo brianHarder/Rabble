@@ -1,3 +1,6 @@
+# Homework 3
+Django documentation
+
 # Homework 2
 I wrote all the models manually.
 
