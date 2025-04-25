@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import SubRabble, Post
 from django.shortcuts import get_object_or_404
 from .forms import PostForm
@@ -43,7 +43,17 @@ def post_detail(request, subrabble_community_id, pk):
 @login_required
 def post_create(request, subrabble_community_id):
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
-    form = PostForm()
+
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user_id = request.user
+            post.subrabble_id = subrabble
+            post.save()
+            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+    else:
+        form = PostForm()
 
     context = {
         'subrabble': subrabble,
@@ -56,14 +66,53 @@ def post_create(request, subrabble_community_id):
 def post_edit(request, subrabble_community_id, pk):
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
-    form = PostForm(instance=post)
 
     if request.user != post.user_id:
         return HttpResponseForbidden("You cannot edit other users' posts.")
+
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+    else:
+        form = PostForm(instance=post)
 
     context = {
         'subrabble': subrabble,
         'form': form
     }
-
     return render(request, "rabble/post_form.html", context)
+
+@login_required
+def post_delete(request, subrabble_community_id, pk):
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+    post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
+
+    if request.user != post.user_id:
+        return HttpResponseForbidden("You cannot delete other users' posts.")
+
+    if request.method == "POST":
+        post.delete()
+        return redirect("subrabble-detail", subrabble_community_id=subrabble.subrabble_community_id)
+
+    context = {
+        'subrabble': subrabble,
+        'post': post
+    }
+    return render(request, "rabble/post_delete.html", context)
+
+@login_required
+def comment_create(request, subrabble_community_id, post_id):
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+    post = get_object_or_404(post, pk=post_id, subrabble_id=subrabble)
+    form = PostForm()
+
+    context = {
+        'subrabble': subrabble,
+        'post': post,
+        'form': form
+    }
+
+    return render(request, "rabble_comment_form.html", context)
+

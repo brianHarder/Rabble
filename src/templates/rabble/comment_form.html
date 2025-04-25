@@ -1,0 +1,26 @@
+{% extends "rabble/base.html" %}
+
+{% block title %}
+  {% if form.instance.pk %}Edit Comment{% else %}New Comment{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h2>
+    {% if form.instance.pk %}
+      Edit Comment
+    {% else %}
+      New Comment on "{{ post.title }}"
+    {% endif %}
+  </h2>
+
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-login">
+      {% if form.instance.pk %}Save Changes{% else %}Add Comment{% endif %}
+    </button>
+    <a href="{% url 'post-detail' subrabble.subrabble_community_id post.pk %}" class="btn btn-secondary ms-2">
+      Cancel
+    </a>
+  </form>
+{% endblock %}

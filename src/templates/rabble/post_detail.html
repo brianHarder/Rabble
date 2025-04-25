@@ -21,6 +21,9 @@
         <a href="{% url 'post-edit' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
             Edit Post
         </a>
+        <a href="{% url 'post-delete' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
+            Delete Post
+        </a>
         {% endif %}
     </div>
 </div>
