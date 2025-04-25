@@ -11,4 +11,7 @@ urlpatterns = [
     path("!<slug:subrabble_community_id>/new", views.post_create, name="post-create"),
     path("!<slug:subrabble_community_id>/<int:pk>/edit", views.post_edit, name="post-edit"),
     path("!<slug:subrabble_community_id>/<int:pk>/delete", views.post_delete, name="post-delete"),
+    path("!<slug:subrabble_community_id>/<int:pk>/new", views.comment_create, name="comment-create"),
+    path("!<slug:subrabble_community_id>/<int:post_id>/<int:pk>/edit", views.comment_edit, name="comment-edit"),
+    path("!<slug:subrabble_community_id>/<int:post_id>/<int:pk>/delete", views.comment_delete, name="comment-delete"),
 ]

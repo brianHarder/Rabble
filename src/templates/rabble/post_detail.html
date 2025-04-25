@@ -14,31 +14,53 @@
     <p class="text-muted">By {{ post.user_id.username }}</p>
     <p>{{ post.body }}</p>
 
-    <div class="d-flex justify-content-start align-items-center gap-3 mt-4">
-        <span>👍 {{ post.post_likes.count }}</span>
-        <span>💬 {{ post.comment_set.count }}</span>
+    <div class="d-flex justify-content-between align-items-center gap-3 mt-4">
+        <div class="d-flex align-items-center gap-3">
+            <span>👍 {{ post.post_likes.count }}</span>
+            <span>💬 {{ post.comment_set.count }}</span>
+        </div>
         {% if user.is_authenticated and user == post.user_id %}
-        <a href="{% url 'post-edit' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
-            Edit Post
-        </a>
-        <a href="{% url 'post-delete' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
-            Delete Post
-        </a>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            <a href="{% url 'post-edit' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm">
+                Edit Post
+            </a>
+            <a href="{% url 'post-delete' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm">
+                Delete Post
+            </a>
+        </div>
         {% endif %}
     </div>
+    
 </div>
 
 <hr>
 
-<h4>Comments</h4>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h4>Comments</h4>
+    <a href="{% url 'comment-create' subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm">
+        New Comment
+    </a>
+</div>
 
 {% if post.comment_set.count > 0 %}
     <ul class="list-group mb-3">
         {% for comment in post.comment_set.all %}
             <li class="list-group-item">
-                <p>{{ comment.text }}</p>
-                <div class="d-flex justify-content-between">
-                    <small class="text-muted">By {{ comment.user_id.username }}</small>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p>{{ comment.text }}</p>
+                        <small class="text-muted">By {{ comment.user_id.username }}</small>
+                    </div>
+                    {% if user.is_authenticated and user == comment.user_id %}
+                        <div class="d-flex flex-column gap-1 ms-3">
+                            <a href="{% url 'comment-edit' subrabble.subrabble_community_id post.pk comment.pk %}" class="btn btn-outline-secondary btn-sm">
+                                Edit
+                            </a>
+                            <a href="{% url 'comment-delete' subrabble.subrabble_community_id post.pk comment.pk %}" class="btn btn-outline-secondary btn-sm">
+                                Delete
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </li>
         {% endfor %}

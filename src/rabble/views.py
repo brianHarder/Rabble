@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import SubRabble, Post
+from .models import SubRabble, Post, Comment
 from django.shortcuts import get_object_or_404
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
@@ -103,10 +103,19 @@ def post_delete(request, subrabble_community_id, pk):
     return render(request, "rabble/post_delete.html", context)
 
 @login_required
-def comment_create(request, subrabble_community_id, post_id):
+def comment_create(request, subrabble_community_id, pk):
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
-    post = get_object_or_404(post, pk=post_id, subrabble_id=subrabble)
-    form = PostForm()
+    post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
+    form = CommentForm()
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user_id = request.user
+            comment.post_id = post
+            comment.save()
+            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
 
     context = {
         'subrabble': subrabble,
@@ -114,5 +123,47 @@ def comment_create(request, subrabble_community_id, post_id):
         'form': form
     }
 
-    return render(request, "rabble_comment_form.html", context)
+    return render(request, "rabble/comment_form.html", context)
 
+@login_required
+def comment_edit(request, subrabble_community_id, post_id, pk):
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+    post = get_object_or_404(Post, pk=post_id, subrabble_id=subrabble)
+    comment = get_object_or_404(Comment, pk=pk, post_id=post)
+
+    if request.user != comment.user_id:
+        return HttpResponseForbidden("You cannot edit other users' comments.")
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+    else:
+        form = CommentForm(instance=comment)
+
+    context = {
+        'subrabble': subrabble,
+        'post': post,
+        'form': form
+    }
+    return render(request, "rabble/comment_form.html", context)
+
+@login_required
+def comment_delete(request, subrabble_community_id, post_id, pk):
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+    post = get_object_or_404(Post, pk=post_id, subrabble_id=subrabble)
+    comment = get_object_or_404(Comment, pk=pk, post_id=post)
+
+    if request.user != comment.user_id:
+        return HttpResponseForbidden("You cannot delete other users' comments.")
+    
+    if request.method == "POST":
+        comment.delete()
+        return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+    
+    context = {
+        'subrabble': subrabble,
+        'post': post,
+    }
+    return render(request, "rabble/comment_delete.html", context)
