@@ -6,7 +6,7 @@ class Rabble(models.Model):
     owner = models.ForeignKey('User', on_delete=models.CASCADE)
 
 class SubRabble(models.Model):
-    subrabble_community_id = models.TextField(unique=True)
+    subrabble_community_id = models.CharField(max_length=200, unique=True)
     subrabble_name = models.CharField(max_length=200)
     description = models.TextField()
     allow_anonymous = models.BooleanField()
@@ -40,7 +40,7 @@ class Message(models.Model):
         unique_together = ['user_id', 'chat_id']
 
 class Post(models.Model):
-    title = models.TextField()
+    title = models.CharField(max_length=500)
     body = models.TextField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subrabble_id = models.ForeignKey(SubRabble, on_delete=models.CASCADE)
