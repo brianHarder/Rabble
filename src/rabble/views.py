@@ -132,7 +132,7 @@ def comment_edit(request, subrabble_community_id, post_id, pk):
     comment = get_object_or_404(Comment, pk=pk, post_id=post)
 
     if request.user != comment.user_id:
-        return HttpResponseForbidden("You cannot edit other users' comments.")
+        return HttpResponseForbidden("You cannot edit other people's comments.")
 
     if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
