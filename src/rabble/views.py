@@ -90,7 +90,7 @@ def post_delete(request, subrabble_community_id, pk):
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
 
     if request.user != post.user_id:
-        return HttpResponseForbidden("You cannot delete other users' posts.")
+        return HttpResponseForbidden("You cannot delete other people's posts.")
 
     if request.method == "POST":
         post.delete()
