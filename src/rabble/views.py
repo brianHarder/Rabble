@@ -28,6 +28,18 @@ def subrabble_detail(request, subrabble_community_id):
     return render(request, "rabble/subrabble_detail.html", context)
 
 @login_required
+def subrabble_create():
+    return
+
+@login_required
+def subrabble_edit():
+    return
+
+@login_required
+def subrabble_delete():
+    return
+
+@login_required
 def post_detail(request, subrabble_community_id, pk):
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
