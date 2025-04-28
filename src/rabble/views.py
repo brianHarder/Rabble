@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
-from .models import SubRabble, Post, Comment
-from django.shortcuts import get_object_or_404
-from .forms import PostForm, CommentForm
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from .models import SubRabble, Post, Comment
+from .forms import PostForm, CommentForm
 
 @login_required
 def index(request):
