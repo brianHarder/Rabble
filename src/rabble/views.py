@@ -68,7 +68,7 @@ def post_edit(request, subrabble_community_id, pk):
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
 
     if request.user != post.user_id:
-        return HttpResponseForbidden("You cannot edit other users' posts.")
+        return HttpResponseForbidden("You cannot edit other people's posts.")
 
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
