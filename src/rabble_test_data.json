@@ -25,7 +25,7 @@
     "fields": {
         "subrabble_community_id": "python",
         "subrabble_name": "Python SubRabble",
-        "description": "A place to discuss python",
+        "description": "A place to discuss Python programming",
         "allow_anonymous": true,
         "private": false,
         "rabble_id": 1
@@ -246,7 +246,7 @@
         "parent_id": null,
         "user_id": 5,
         "post_id": 1,
-        "text": "I thought 142 was a better class overall"
+        "text": "I thought 142 was a better class in the end"
     }
 },
 {
