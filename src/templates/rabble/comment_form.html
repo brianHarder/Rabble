@@ -15,11 +15,28 @@
 
   <form method="post" class="mt-4">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <div class="mb-3">
+      {{ form.text.label_tag }}
+      {{ form.text }}
+      {{ form.text.errors }}
+    </div>
+
+    <div class="mb-3">
+      <div class="form-check d-flex align-items-center">
+        {{ form.anonymous }}
+        <label class="form-check-label ms-2">
+          {{ form.anonymous.label }}
+        </label>
+      </div>
+      {{ form.anonymous.errors }}
+    </div>
+
     <button type="submit" class="btn btn-login">
       {% if form.instance.pk %}Save Changes{% else %}Add Comment{% endif %}
     </button>
-    <a href="{% url 'post-detail' subrabble.subrabble_community_id post.pk %}" class="btn btn-secondary ms-2">
+    <a href="{% url 'post-detail' subrabble.subrabble_community_id post.pk %}"
+       class="btn btn-secondary ms-2">
       Cancel
     </a>
   </form>

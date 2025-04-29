@@ -15,7 +15,29 @@
 
   <form method="post" class="mt-4">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <div class="mb-3">
+      {{ form.title.label_tag }}
+      {{ form.title }}
+      {{ form.title.errors }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.body.label_tag }}
+      {{ form.body }}
+      {{ form.body.errors }}
+    </div>
+
+    <div class="mb-3">
+      <div class="form-check d-flex align-items-center">
+        {{ form.anonymous }}
+        <label class="form-check-label ms-2">
+          {{ form.anonymous.label }}
+        </label>
+      </div>
+      {{ form.anonymous.errors }}
+    </div>
+
     <button type="submit" class="btn btn-login">
       {% if form.instance.pk %}Save Changes{% else %}Create Post{% endif %}
     </button>

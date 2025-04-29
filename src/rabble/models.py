@@ -44,6 +44,7 @@ class Post(models.Model):
     body = models.TextField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     subrabble_id = models.ForeignKey(SubRabble, on_delete=models.CASCADE)
+    anonymous = models.BooleanField(default=False)
 
     post_likes = models.ManyToManyField(User, through='PostLike', related_name="liked_posts", blank=True)
 
@@ -52,13 +53,14 @@ class Comment(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField()
+    anonymous = models.BooleanField(default=False)
 
     comment_likes = models.ManyToManyField(User, through='CommentLike', related_name="liked_comments", blank=True)
 
 class PostLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    is_dislike = models.BooleanField()
+    is_dislike = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ['user', 'post']
@@ -66,7 +68,7 @@ class PostLike(models.Model):
 class CommentLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    is_dislike = models.BooleanField()
+    is_dislike = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ['user', 'comment']

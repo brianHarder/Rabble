@@ -21,7 +21,11 @@
         </h5>
         <p>{{ post.body }}</p>
         <div class="d-flex justify-content-between align-items-center">
-          <small class="text-muted">By {{ post.user_id.username }}</small>
+          {% if post.anonymous %}
+          <small class="text-muted">By anonymous</small>
+          {% else %}
+            <small class="text-muted">By {{ post.user_id.username }}</small>
+          {% endif %}
           <div>
             <span class="me-3">
               👍 <span class="badge bg-secondary">{{ post.post_likes.count }}</span>
