@@ -46,12 +46,36 @@ def subrabble_detail(request, subrabble_community_id):
     return render(request, "rabble/subrabble_detail.html", context)
 
 @login_required
-def subrabble_edit():
-    return
+def subrabble_edit(request, subrabble_community_id):
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+
+    if request.method == "POST":
+        form = SubRabbleForm(request.POST, instance=subrabble)
+        if form.is_valid():
+            form.save()
+            return redirect("subrabble-detail", subrabble_community_id=subrabble.subrabble_community_id)
+    else:
+        form = SubRabbleForm(instance=subrabble)
+    
+    context = {
+        'form': form,
+    }
+
+    return render(request, "rabble/subrabble_form.html", context)
 
 @login_required
-def subrabble_delete():
-    return
+def subrabble_delete(request, subrabble_community_id):
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+
+    if request.method == "POST":
+        subrabble.delete()
+        return redirect("index")
+
+    context = {
+        'subrabble': subrabble
+    }
+
+    return render(request, "rabble/subrabble_delete.html", context)
 
 @login_required
 def post_detail(request, subrabble_community_id, pk):
