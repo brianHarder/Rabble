@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from .models import SubRabble, Post, Comment
-from .forms import PostForm, CommentForm
+from .models import Rabble, SubRabble, Post, Comment
+from .forms import PostForm, CommentForm, SubRabbleForm
+
+@login_required
+def profile(request):
+    return render(request, "rabble/profile.html")
 
 @login_required
 def index(request):
@@ -12,8 +16,22 @@ def index(request):
     return render(request, "rabble/index.html", context)
 
 @login_required
-def profile(request):
-    return render(request, "rabble/profile.html")
+def subrabble_create(request):
+    if request.method == "POST":
+        form = SubRabbleForm(request.POST)
+        if form.is_valid():
+            subrabble = form.save(commit=False)
+            subrabble.rabble_id = Rabble.objects.first()
+            subrabble.save()
+            return redirect("subrabble-detail", subrabble_community_id = subrabble.subrabble_community_id)
+    else:
+        form = SubRabbleForm()
+    
+    context = {
+        'form': form,
+    }
+    
+    return render(request, "rabble/subrabble_form.html", context)
 
 @login_required
 def subrabble_detail(request, subrabble_community_id):
@@ -26,10 +44,6 @@ def subrabble_detail(request, subrabble_community_id):
     }
 
     return render(request, "rabble/subrabble_detail.html", context)
-
-@login_required
-def subrabble_create():
-    return
 
 @login_required
 def subrabble_edit():

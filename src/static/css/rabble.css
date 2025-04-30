@@ -58,3 +58,9 @@ body {
 .text-rabble {
     color: var(--rabble-primary);
 }
+
+div .subrabbles-title {
+    font-family: 'Pacifico';
+    font-size: 1.75rem;
+    color: maroon;
+  }

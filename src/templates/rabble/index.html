@@ -1,6 +1,16 @@
 {% extends "rabble/base.html" %}
 
 {% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="subrabbles-title">
+      SubRabbles:
+    </span>
+
+    <a href="{% url 'subrabble-create' %}" class="btn btn-primary">
+      New SubRabble
+    </a>
+  </div>
+
   {% if subrabbles %}
     <ul class="list-group">
       {% for sr in subrabbles %}
@@ -9,7 +19,10 @@
             <strong>!{{ sr.subrabble_community_id }}</strong> — {{ sr.subrabble_name }}<br>
             <small class="text-muted">{{ sr.description }}</small>
           </div>
-          <a href="{% url 'subrabble-detail' sr.subrabble_community_id %}" class="btn btn-sm btn-outline-primary">View</a>
+          <a href="{% url 'subrabble-detail' sr.subrabble_community_id %}"
+             class="btn btn-sm btn-outline-primary">
+            View
+          </a>
         </li>
       {% endfor %}
     </ul>

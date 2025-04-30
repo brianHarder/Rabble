@@ -1,0 +1,61 @@
+{% extends "rabble/base.html" %}
+
+{% block title %}
+  {% if form.instance.pk %}Edit SubRabble{% else %}New SubRabble{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="mt-4">
+    <h2>
+      {% if form.instance.pk %}
+        Edit SubRabble
+      {% else %}
+        New SubRabble
+      {% endif %}
+    </h2>
+
+    <form method="post" class="mt-3">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="mb-3">
+        {{ form.subrabble_community_id.label_tag }}
+        {{ form.subrabble_community_id }}
+        {{ form.subrabble_community_id.errors }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.subrabble_name.label_tag }}
+        {{ form.subrabble_name }}
+        {{ form.subrabble_name.errors }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {{ form.description.errors }}
+      </div>
+
+      <div class="form-check mb-3">
+        {{ form.allow_anonymous }}
+        {{ form.allow_anonymous.label_tag }}
+        {{ form.allow_anonymous.errors }}
+      </div>
+
+      <div class="form-check mb-4">
+        {{ form.private }}
+        {{ form.private.label_tag }}
+        {{ form.private.errors }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        {% if form.instance.pk %}Save Changes{% else %}Create SubRabble{% endif %}
+      </button>
+    </form>
+  </div>
+{% endblock %}
