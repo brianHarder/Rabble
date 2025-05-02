@@ -1,3 +1,7 @@
+# Homework 4
+Django documentation
+Django rest documentation: https://www.django-rest-framework.org/tutorial/2-requests-and-responses/
+
 # Homework 3
 Django documentation
 
