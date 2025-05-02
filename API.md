@@ -5,8 +5,8 @@
     "title": "Brand New Post",
     "body": "new post created",
     "anonymous": false,
-    "user_id": 1,
-    "subrabble_id": 1
+    "author": "alex",
+    "subrabble": "cs-courses"
 }
 
 ## PATCH: /api/subrabbles/!cs-courses/posts/1
