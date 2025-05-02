@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rabble"
+    "rabble",
+    "rest_framework",
+    "api"
 ]
 
 MIDDLEWARE = [
