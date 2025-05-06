@@ -81,10 +81,14 @@ def subrabble_delete(request, subrabble_community_id):
 def post_detail(request, subrabble_community_id, pk):
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
+    liked = False
+    if request.user.is_authenticated:
+        liked = request.user in post.post_likes.all()
 
     context = {
         'subrabble': subrabble,
-        'post': post
+        'post': post,
+        'liked': liked
     }
 
     return render(request, "rabble/post_detail.html", context)

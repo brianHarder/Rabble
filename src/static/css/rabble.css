@@ -64,3 +64,11 @@ div .subrabbles-title {
     font-size: 1.75rem;
     color: maroon;
   }
+
+#like-btn i {
+    color: gold;
+  }
+
+#like-btn.liked i {
+color: blue;
+}
