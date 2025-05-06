@@ -1,7 +1,8 @@
-from rest_framework import status, generics
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from rabble.models import *
 from .serializers import *
@@ -55,3 +56,35 @@ def post_editor(request, subrabble_community_id, pk):
     elif request.method == "DELETE":
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@csrf_exempt
+@api_view(['POST'])
+def post_likes(request, subrabble_community_id, pk):
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+    post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
+
+    username = request.data.get('user')
+    if not username:
+        return Response(
+            {"detail": "Missing required field: user"}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    user = get_object_or_404(User, username=username)
+
+    existing = PostLike.objects.filter(user=user, post=post)
+    if existing.exists():
+        existing.delete()
+        liked = False
+    else:
+        PostLike.objects.create(user=user, post=post)
+        liked = True
+
+    like_count = post.post_likes.count()
+
+    return Response(
+        {
+            "liked": liked,
+            "like_count": like_count
+        },
+        status=status.HTTP_200_OK
+    )

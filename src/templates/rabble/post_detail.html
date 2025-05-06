@@ -1,4 +1,5 @@
 {% extends "rabble/base.html" %}
+{% load static %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -20,7 +21,15 @@
 
     <div class="d-flex justify-content-between align-items-center gap-3 mt-4">
         <div class="d-flex align-items-center gap-3">
-            <span>👍 {{ post.post_likes.count }}</span>
+            <button
+                id="like-btn"
+                data-like-url="{% url 'post-likes' subrabble.subrabble_community_id post.pk %}"
+                data-username="{{ user.username }}"
+                {% if not user.is_authenticated %}disabled title="Log in to like"{% endif %}
+                class="btn btn-light p-0 border-0"
+                >
+                👍 <span id="like-count">{{ post.post_likes.count }}</span>
+            </button>
             <span>💬 {{ post.comment_set.count }}</span>
         </div>
         {% if user.is_authenticated and user == post.user_id %}
@@ -76,4 +85,5 @@
 {% else %}
     <p>No comments yet. Be the first to comment!</p>
 {% endif %}
+
 {% endblock %}
