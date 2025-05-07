@@ -1,6 +1,6 @@
 import pytest
+from rabble.tests.factories import *
 from django.urls import reverse
-from rabble.tests.factories import CommunityFactory, SubRabbleFactory, PostFactory, CommentFactory
 from rabble.models import SubRabble, Post, Comment
 
 @pytest.mark.django_db
@@ -55,9 +55,9 @@ def test_post_create_view(client):
     community = CommunityFactory.create()
     client.force_login(community.owner)
 
-    sub = SubRabbleFactory.create(rabble_id=community)
+    subrabble = SubRabbleFactory.create(rabble_id=community)
 
-    url = reverse('post-create', kwargs={'subrabble_community_id': sub.subrabble_community_id})
+    url = reverse('post-create', kwargs={'subrabble_community_id': subrabble.subrabble_community_id})
     form_data = {
         'title': 'My New Post',
         'body': 'Hello, world!',
@@ -65,12 +65,12 @@ def test_post_create_view(client):
     response = client.post(url, form_data)
 
     assert response.status_code == 302
-    post = Post.objects.get(title='My New Post', subrabble_id=sub)
+    post = Post.objects.get(title='My New Post', subrabble_id=subrabble)
     assert post.body == 'Hello, world!'
     assert post.user_id == community.owner
 
     expected = reverse(
         'post-detail',
-        kwargs={'subrabble_community_id': sub.subrabble_community_id, 'pk': post.pk}
+        kwargs={'subrabble_community_id': subrabble.subrabble_community_id, 'pk': post.pk}
     )
     assert response.url.endswith(expected)
