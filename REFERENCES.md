@@ -1,8 +1,9 @@
 # Homework 5
-Django documentation
+Django documentation <br>
+Django & pytest article: https://djangostars.com/blog/django-pytest-testing/
 
 # Homework 4
-Django documentation
+Django documentation <br>
 Django rest documentation: https://www.django-rest-framework.org/tutorial/2-requests-and-responses/
 
 # Homework 3
