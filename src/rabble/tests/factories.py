@@ -34,6 +34,7 @@ class SubRabbleFactory(DjangoModelFactory):
     allow_anonymous = True
     private = Faker("boolean")
     rabble_id = SubFactory(CommunityFactory)
+    user_id = SubFactory(UserFactory)
 
 
 class PostFactory(DjangoModelFactory):
