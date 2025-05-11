@@ -59,6 +59,7 @@ def subrabble_edit(request, subrabble_community_id):
     
     context = {
         'form': form,
+        'subrabble': subrabble
     }
 
     return render(request, "rabble/subrabble_form.html", context)
@@ -218,5 +219,6 @@ def comment_delete(request, subrabble_community_id, post_id, pk):
     context = {
         'subrabble': subrabble,
         'post': post,
+        'comment': comment
     }
     return render(request, "rabble/comment_delete.html", context)

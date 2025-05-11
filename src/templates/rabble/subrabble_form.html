@@ -56,6 +56,12 @@
       <button type="submit" class="btn btn-primary">
         {% if form.instance.pk %}Save Changes{% else %}Create SubRabble{% endif %}
       </button>
+
+      {% if form.instance.pk %}
+        <a href="{% url 'subrabble-detail' subrabble.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
+      {% else %}
+        <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Cancel</a>
+      {% endif %}
     </form>
   </div>
 {% endblock %}
