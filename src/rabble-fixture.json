@@ -16,7 +16,8 @@
         "description": "A place to discuss CS courses",
         "allow_anonymous": true,
         "private": false,
-        "rabble_id": 1
+        "rabble_id": 1,
+        "user_id" : 3
     }
 },
 {
@@ -28,7 +29,8 @@
         "description": "A place to discuss Python programming",
         "allow_anonymous": true,
         "private": false,
-        "rabble_id": 1
+        "rabble_id": 1,
+        "user_id" : 3
     }
 },
 {
@@ -40,7 +42,8 @@
         "description": "A place to discuss web development",
         "allow_anonymous": true,
         "private": false,
-        "rabble_id": 1
+        "rabble_id": 1,
+        "user_id" : 3
     }
 },
 {

@@ -12,6 +12,7 @@ class SubRabble(models.Model):
     allow_anonymous = models.BooleanField()
     private = models.BooleanField()
     rabble_id = models.ForeignKey(Rabble, on_delete=models.CASCADE)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.subrabble_community_id
