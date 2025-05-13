@@ -13,6 +13,7 @@ class SubRabble(models.Model):
     private = models.BooleanField()
     rabble_id = models.ForeignKey(Rabble, on_delete=models.CASCADE)
     user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    members = models.ManyToManyField('User', blank=True, related_name="joined_subrabbles")
 
     def __str__(self):
         return self.subrabble_community_id
@@ -23,11 +24,9 @@ class Chat(models.Model):
 class User(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(blank=True, null=True)
-
     follows = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
     invites = models.ManyToManyField('self', symmetrical=False, related_name='invitations', blank=True)
     joined_rabbles = models.ManyToManyField(Rabble, blank=True)
-    joined_subrabbles = models.ManyToManyField(SubRabble, blank=True)
     added_to_chat = models.ManyToManyField(Chat, blank=True)
     interested_in = models.ManyToManyField('Interest', blank=True)
 

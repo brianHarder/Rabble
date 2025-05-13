@@ -14,6 +14,7 @@
   {% if subrabbles %}
     <ul class="list-group">
       {% for sr in subrabbles %}
+        {% if not sr.private or user in sr.members.all %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <div>
             <strong>!{{ sr.subrabble_community_id }}</strong> — {{ sr.subrabble_name }}<br>
@@ -24,6 +25,7 @@
             View
           </a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>
   {% else %}
