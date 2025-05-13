@@ -48,6 +48,7 @@ def subrabble_detail(request, subrabble_community_id):
 @login_required
 def subrabble_edit(request, subrabble_community_id):
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+    community = subrabble.rabble_id
 
     if request.method == "POST":
         form = SubRabbleForm(request.POST, instance=subrabble)
@@ -55,7 +56,7 @@ def subrabble_edit(request, subrabble_community_id):
             form.save()
             return redirect("subrabble-detail", subrabble_community_id=subrabble.subrabble_community_id)
     else:
-        form = SubRabbleForm(instance=subrabble)
+        form = SubRabbleForm(instance=subrabble, rabble=community)
     
     context = {
         'form': form,

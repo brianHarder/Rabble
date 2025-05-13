@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class Rabble(models.Model):
     community_id = models.TextField(unique=True)
     owner = models.ForeignKey('User', on_delete=models.CASCADE)
+    members = models.ManyToManyField('User', related_name="joined_rabbles")
 
 class SubRabble(models.Model):
     subrabble_community_id = models.CharField(max_length=200, unique=True)
@@ -26,7 +27,6 @@ class User(AbstractUser):
     profile_picture = models.ImageField(blank=True, null=True)
     follows = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
     invites = models.ManyToManyField('self', symmetrical=False, related_name='invitations', blank=True)
-    joined_rabbles = models.ManyToManyField(Rabble, blank=True)
     added_to_chat = models.ManyToManyField(Chat, blank=True)
     interested_in = models.ManyToManyField('Interest', blank=True)
 

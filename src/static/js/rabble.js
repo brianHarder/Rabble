@@ -52,3 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+  var priv = document.getElementById("id_private");
+  var members = document.getElementById("members-field");
+  if (!priv || !members) return;
+  function toggle() {
+    members.style.display = priv.checked ? "block" : "none";
+  }
+  priv.addEventListener("change", toggle);
+  toggle();
+});

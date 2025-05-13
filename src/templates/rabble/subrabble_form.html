@@ -7,11 +7,7 @@
 {% block content %}
   <div class="mt-4">
     <h2>
-      {% if form.instance.pk %}
-        Edit SubRabble
-      {% else %}
-        New SubRabble
-      {% endif %}
+      {% if form.instance.pk %}Edit SubRabble{% else %}New SubRabble{% endif %}
     </h2>
 
     <form method="post" class="mt-3">
@@ -53,12 +49,18 @@
         {{ form.private.errors }}
       </div>
 
+      <div id="members-field" class="mb-4" style="display: none;">
+        {{ form.members.label_tag }}
+        {{ form.members }}
+        {{ form.members.errors }}
+      </div>
+
       <button type="submit" class="btn btn-primary">
         {% if form.instance.pk %}Save Changes{% else %}Create SubRabble{% endif %}
       </button>
 
       {% if form.instance.pk %}
-        <a href="{% url 'subrabble-detail' subrabble.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
+        <a href="{% url 'subrabble-detail' form.instance.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
       {% else %}
         <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Cancel</a>
       {% endif %}
