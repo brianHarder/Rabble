@@ -28,6 +28,7 @@
       {{ form.body.errors }}
     </div>
 
+    {% if subrabble.allow_anonymous %}
     <div class="mb-3">
       <div class="form-check d-flex align-items-center">
         {{ form.anonymous }}
@@ -37,6 +38,7 @@
       </div>
       {{ form.anonymous.errors }}
     </div>
+    {% endif %}
 
     <button type="submit" class="btn btn-login">
       {% if form.instance.pk %}Save Changes{% else %}Create Post{% endif %}

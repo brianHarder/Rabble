@@ -17,15 +17,18 @@ def index(request):
 
 @login_required
 def subrabble_create(request):
+    community = Rabble.objects.first()
+
     if request.method == "POST":
         form = SubRabbleForm(request.POST)
         if form.is_valid():
             subrabble = form.save(commit=False)
-            subrabble.rabble_id = Rabble.objects.first()
+            subrabble.rabble_id = community
+            subrabble.user_id = request.user
             subrabble.save()
             return redirect("subrabble-detail", subrabble_community_id = subrabble.subrabble_community_id)
     else:
-        form = SubRabbleForm()
+        form = SubRabbleForm(rabble=community)
     
     context = {
         'form': form,
