@@ -1,3 +1,6 @@
+# Homework 6
+No external resources, just the provided notes.
+
 # Homework 5
 Django documentation <br>
 Django & pytest article: https://djangostars.com/blog/django-pytest-testing/
