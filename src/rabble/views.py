@@ -11,37 +11,51 @@ def profile(request):
 @login_required
 def index(request):
     context = {
-        'subrabbles': SubRabble.objects.all()
+        'rabbles': Rabble.objects.all()
     }
     return render(request, "rabble/index.html", context)
 
 @login_required
-def subrabble_create(request):
-    community = Rabble.objects.first()
+def rabble_detail(request, community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabbles = SubRabble.objects.filter(rabble_id=rabble)
+    
+    context = {
+        'rabble': rabble,
+        'subrabbles': subrabbles
+    }
+    return render(request, "rabble/rabble_detail.html", context)
+
+@login_required
+def subrabble_create(request, community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
 
     if request.method == "POST":
         form = SubRabbleForm(request.POST)
         if form.is_valid():
             subrabble = form.save(commit=False)
-            subrabble.rabble_id = community
+            subrabble.rabble_id = rabble
             subrabble.user_id = request.user
             subrabble.save()
-            return redirect("subrabble-detail", subrabble_community_id = subrabble.subrabble_community_id)
+            return redirect("subrabble-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id)
     else:
-        form = SubRabbleForm(rabble=community)
+        form = SubRabbleForm(rabble=rabble)
     
     context = {
         'form': form,
+        'rabble': rabble
     }
     
     return render(request, "rabble/subrabble_form.html", context)
 
 @login_required
-def subrabble_detail(request, subrabble_community_id):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def subrabble_detail(request, community_id, subrabble_community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     posts = Post.objects.filter(subrabble_id=subrabble)
 
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'posts': posts
     }
@@ -49,48 +63,53 @@ def subrabble_detail(request, subrabble_community_id):
     return render(request, "rabble/subrabble_detail.html", context)
 
 @login_required
-def subrabble_edit(request, subrabble_community_id):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
-    community = subrabble.rabble_id
+def subrabble_edit(request, community_id, subrabble_community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
 
     if request.method == "POST":
         form = SubRabbleForm(request.POST, instance=subrabble)
         if form.is_valid():
             form.save()
-            return redirect("subrabble-detail", subrabble_community_id=subrabble.subrabble_community_id)
+            return redirect("subrabble-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id)
     else:
-        form = SubRabbleForm(instance=subrabble, rabble=community)
+        form = SubRabbleForm(instance=subrabble, rabble=rabble)
     
     context = {
         'form': form,
-        'subrabble': subrabble
+        'subrabble': subrabble,
+        'rabble': rabble
     }
 
     return render(request, "rabble/subrabble_form.html", context)
 
 @login_required
-def subrabble_delete(request, subrabble_community_id):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def subrabble_delete(request, community_id, subrabble_community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
 
     if request.method == "POST":
         subrabble.delete()
-        return redirect("index")
+        return redirect("rabble-detail", community_id=rabble.community_id)
 
     context = {
-        'subrabble': subrabble
+        'subrabble': subrabble,
+        'rabble': rabble
     }
 
     return render(request, "rabble/subrabble_delete.html", context)
 
 @login_required
-def post_detail(request, subrabble_community_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def post_detail(request, community_id, subrabble_community_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
     liked = False
     if request.user.is_authenticated:
         liked = request.user in post.post_likes.all()
 
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'post': post,
         'liked': liked
@@ -99,8 +118,9 @@ def post_detail(request, subrabble_community_id, pk):
     return render(request, "rabble/post_detail.html", context)
 
 @login_required
-def post_create(request, subrabble_community_id):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def post_create(request, community_id, subrabble_community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
 
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -109,11 +129,12 @@ def post_create(request, subrabble_community_id):
             post.user_id = request.user
             post.subrabble_id = subrabble
             post.save()
-            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+            return redirect("post-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
     else:
         form = PostForm()
 
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'form': form
     }
@@ -121,8 +142,9 @@ def post_create(request, subrabble_community_id):
     return render(request, "rabble/post_form.html", context)
 
 @login_required
-def post_edit(request, subrabble_community_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def post_edit(request, community_id, subrabble_community_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
 
     if request.user != post.user_id:
@@ -132,19 +154,21 @@ def post_edit(request, subrabble_community_id, pk):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+            return redirect("post-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
     else:
         form = PostForm(instance=post)
 
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'form': form
     }
     return render(request, "rabble/post_form.html", context)
 
 @login_required
-def post_delete(request, subrabble_community_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def post_delete(request, community_id, subrabble_community_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
 
     if request.user != post.user_id:
@@ -152,17 +176,19 @@ def post_delete(request, subrabble_community_id, pk):
 
     if request.method == "POST":
         post.delete()
-        return redirect("subrabble-detail", subrabble_community_id=subrabble.subrabble_community_id)
+        return redirect("subrabble-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id)
 
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'post': post
     }
     return render(request, "rabble/post_delete.html", context)
 
 @login_required
-def comment_create(request, subrabble_community_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def comment_create(request, community_id, subrabble_community_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
     form = CommentForm()
 
@@ -173,9 +199,10 @@ def comment_create(request, subrabble_community_id, pk):
             comment.user_id = request.user
             comment.post_id = post
             comment.save()
-            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+            return redirect("post-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
 
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'post': post,
         'form': form
@@ -184,8 +211,9 @@ def comment_create(request, subrabble_community_id, pk):
     return render(request, "rabble/comment_form.html", context)
 
 @login_required
-def comment_edit(request, subrabble_community_id, post_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def comment_edit(request, community_id, subrabble_community_id, post_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=post_id, subrabble_id=subrabble)
     comment = get_object_or_404(Comment, pk=pk, post_id=post)
 
@@ -196,11 +224,12 @@ def comment_edit(request, subrabble_community_id, post_id, pk):
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+            return redirect("post-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
     else:
         form = CommentForm(instance=comment)
 
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'post': post,
         'form': form
@@ -208,8 +237,9 @@ def comment_edit(request, subrabble_community_id, post_id, pk):
     return render(request, "rabble/comment_form.html", context)
 
 @login_required
-def comment_delete(request, subrabble_community_id, post_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def comment_delete(request, community_id, subrabble_community_id, post_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=post_id, subrabble_id=subrabble)
     comment = get_object_or_404(Comment, pk=pk, post_id=post)
 
@@ -218,9 +248,10 @@ def comment_delete(request, subrabble_community_id, post_id, pk):
     
     if request.method == "POST":
         comment.delete()
-        return redirect("post-detail", subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
+        return redirect("post-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
     
     context = {
+        'rabble': rabble,
         'subrabble': subrabble,
         'post': post,
         'comment': comment

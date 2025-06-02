@@ -1,34 +1,39 @@
 {% extends "rabble/base.html" %}
 
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <span class="subrabbles-title">
-      SubRabbles:
-    </span>
+  <div class="container py-4">
+    <div class="row mb-4">
+      <div class="col">
+        <h1 class="display-4">Welcome to Rabble</h1>
+        <p class="lead">Join communities and start discussions!</p>
+      </div>
+    </div>
 
-    <a href="{% url 'subrabble-create' %}" class="btn btn-primary">
-      New SubRabble
-    </a>
-  </div>
-
-  {% if subrabbles %}
-    <ul class="list-group">
-      {% for sr in subrabbles %}
-        {% if not sr.private or user in sr.members.all %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>!{{ sr.subrabble_community_id }}</strong> — {{ sr.subrabble_name }}<br>
-            <small class="text-muted">{{ sr.description }}</small>
+    {% if rabbles %}
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for rabble in rabbles %}
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">{{ rabble.community_id }}</h5>
+                <p class="card-text">
+                  <small class="text-muted">
+                    {{ rabble.members.count }} members
+                  </small>
+                </p>
+                <a href="{% url 'rabble-detail' rabble.community_id %}"
+                   class="btn btn-primary">
+                  View Community
+                </a>
+              </div>
+            </div>
           </div>
-          <a href="{% url 'subrabble-detail' sr.subrabble_community_id %}"
-             class="btn btn-sm btn-outline-primary">
-            View
-          </a>
-        </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No subRabbles yet. Create one to get started!</p>
-  {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info">
+        No communities yet. Be the first to create one!
+      </div>
+    {% endif %}
+  </div>
 {% endblock content %}

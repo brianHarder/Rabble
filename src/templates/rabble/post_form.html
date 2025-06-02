@@ -44,9 +44,9 @@
       {% if form.instance.pk %}Save Changes{% else %}Create Post{% endif %}
     </button>
     {% if form.instance.pk %}
-      <a href="{% url 'post-detail' subrabble.subrabble_community_id form.instance.pk %}" class="btn btn-secondary ms-2">Cancel</a>
+      <a href="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id form.instance.pk %}" class="btn btn-secondary ms-2">Cancel</a>
     {% else %}
-      <a href="{% url 'subrabble-detail' subrabble.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
+      <a href="{% url 'subrabble-detail' rabble.community_id subrabble.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
     {% endif %}
   </form>
 {% endblock %}

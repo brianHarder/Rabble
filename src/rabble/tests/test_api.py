@@ -13,7 +13,10 @@ def test_subrabble_get(api_client):
     community = CommunityFactory.create()
     subrabble = SubRabbleFactory.create(rabble_id=community)
 
-    response = api_client.get(reverse('api-subrabble', args=[subrabble.subrabble_community_id]))
+    response = api_client.get(reverse('api-subrabble', args=[
+        community.community_id,
+        subrabble.subrabble_community_id
+    ]))
     assert response.status_code == 200
 
     data = response.json()
@@ -39,7 +42,10 @@ def test_post_post(api_client):
     }
 
     response = api_client.post(
-        reverse('api-post-list', args=[subrabble.subrabble_community_id]),
+        reverse('api-post-list', args=[
+            community.community_id,
+            subrabble.subrabble_community_id
+        ]),
         data,
         format='json'
     )
@@ -61,7 +67,14 @@ def test_post_patch(api_client):
     post = PostFactory.create(subrabble_id=subrabble, user_id=community.owner)
     data = {'title': 'New Title'}
 
-    response = api_client.patch(reverse('api-post-editor', args=[subrabble.subrabble_community_id, post.pk]), data)
+    response = api_client.patch(
+        reverse('api-post-editor', args=[
+            community.community_id,
+            subrabble.subrabble_community_id,
+            post.pk
+        ]),
+        data
+    )
     assert response.status_code == 200
 
     post.refresh_from_db()

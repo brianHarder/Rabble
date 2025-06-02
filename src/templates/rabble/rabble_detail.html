@@ -1,0 +1,42 @@
+{% extends "rabble/base.html" %}
+
+{% block content %}
+<div class="mb-4 d-flex justify-content-between align-items-center">
+    <a href="{% url 'index' %}" class="text-decoration-none text-muted">
+        ← Back to homepage
+    </a>
+</div>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>{{ rabble.community_id }}</h2>
+    <a href="{% url 'subrabble-create' rabble.community_id %}" class="btn btn-primary">
+      New SubRabble
+    </a>
+  </div>
+
+  {% if subrabbles %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for sr in subrabbles %}
+        {% if not sr.private or user in sr.members.all %}
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">!{{ sr.subrabble_community_id }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ sr.subrabble_name }}</h6>
+              <p class="card-text">{{ sr.description }}</p>
+              <a href="{% url 'subrabble-detail' rabble.community_id sr.subrabble_community_id %}"
+                 class="btn btn-primary">
+                View
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      No subRabbles yet. Create one to get started!
+    </div>
+  {% endif %}
+{% endblock content %} 

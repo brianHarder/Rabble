@@ -64,7 +64,12 @@ class SubRabbleForm(forms.ModelForm):
             'members',
         ]
         widgets = {
-            'subrabble_community_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter unique community ID…'}),
+            'subrabble_community_id': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter community ID (no spaces allowed)…',
+                'pattern': '[^\\s]*',
+                'title': 'Community ID cannot contain spaces'
+            }),
             'subrabble_name':      forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter sub-Rabble name…'}),
             'description':         forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is this sub-Rabble about?'}),
             'allow_anonymous':     forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -78,6 +83,12 @@ class SubRabbleForm(forms.ModelForm):
             'private':                'Private sub-Rabble?',
             'members':                'Members',
         }
+
+    def clean_subrabble_community_id(self):
+        community_id = self.cleaned_data.get('subrabble_community_id')
+        if ' ' in community_id:
+            raise forms.ValidationError("Community ID cannot contain spaces.")
+        return community_id
 
     def __init__(self, *args, rabble=None, **kwargs):
         super().__init__(*args, **kwargs)

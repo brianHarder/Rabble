@@ -60,9 +60,9 @@
       </button>
 
       {% if form.instance.pk %}
-        <a href="{% url 'subrabble-detail' form.instance.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
+        <a href="{% url 'subrabble-detail' rabble.community_id form.instance.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
       {% else %}
-        <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Cancel</a>
+        <a href="{% url 'rabble-detail' rabble.community_id %}" class="btn btn-secondary ms-2">Cancel</a>
       {% endif %}
     </form>
   </div>

@@ -8,22 +8,25 @@ from rabble.models import *
 from .serializers import *
 
 @api_view(['GET'])
-def subrabble_list(request):
+def subrabble_list(request, community_id):
     if request.method == "GET":
-        subrabbles = SubRabble.objects.all()
+        rabble = get_object_or_404(Rabble, community_id=community_id)
+        subrabbles = SubRabble.objects.filter(rabble_id=rabble)
         serializer = SubRabbleSerializer(subrabbles, many=True)
         return Response(serializer.data)
 
 @api_view(['GET'])
-def subrabble_by_identifier(request, subrabble_community_id):
+def subrabble_by_identifier(request, community_id, subrabble_community_id):
     if request.method == "GET":
-        subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+        rabble = get_object_or_404(Rabble, community_id=community_id)
+        subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
         serializer = SubRabbleSerializer(subrabble)
         return Response(serializer.data)
     
 @api_view(['GET', 'POST'])
-def post_list(request, subrabble_community_id):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def post_list(request, community_id, subrabble_community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
 
     if request.method == "GET":
         posts = Post.objects.filter(subrabble_id=subrabble)
@@ -38,8 +41,9 @@ def post_list(request, subrabble_community_id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET', 'PATCH', 'DELETE'])
-def post_editor(request, subrabble_community_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def post_editor(request, community_id, subrabble_community_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
 
     if request.method == "GET":
@@ -59,8 +63,9 @@ def post_editor(request, subrabble_community_id, pk):
 
 @csrf_exempt
 @api_view(['POST'])
-def post_likes(request, subrabble_community_id, pk):
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id)
+def post_likes(request, community_id, subrabble_community_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
     post = get_object_or_404(Post, pk=pk, subrabble_id=subrabble)
 
     username = request.data.get('user')

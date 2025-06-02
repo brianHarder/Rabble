@@ -37,7 +37,7 @@
     <button type="submit" class="btn btn-login">
       {% if form.instance.pk %}Save Changes{% else %}Add Comment{% endif %}
     </button>
-    <a href="{% url 'post-detail' subrabble.subrabble_community_id post.pk %}"
+    <a href="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id post.pk %}"
        class="btn btn-secondary ms-2">
       Cancel
     </a>

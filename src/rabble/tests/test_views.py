@@ -14,12 +14,12 @@ def test_index_view(client):
     response = client.get(url)
     assert response.status_code == 200
 
-    assert 'subrabbles' in response.context
-    assert set(response.context['subrabbles']) == set(SubRabble.objects.all())
+    assert 'rabbles' in response.context
+    assert community in response.context['rabbles']
 
     html = response.content.decode()
-    for sub in subrabbles:
-        assert sub.subrabble_community_id in html
+    assert community.community_id in html
+    assert str(community.members.count()) in html
 
 
 @pytest.mark.django_db
@@ -35,7 +35,10 @@ def test_subrabble_detail_view(client):
         posts.append(post)
         CommentFactory.create(post_id=post, user_id=community.owner)
 
-    url = reverse('subrabble-detail', kwargs={'subrabble_community_id': subrabble.subrabble_community_id})
+    url = reverse('subrabble-detail', kwargs={
+        'community_id': community.community_id,
+        'subrabble_community_id': subrabble.subrabble_community_id
+    })
     response = client.get(url)
     assert response.status_code == 200
 
@@ -57,7 +60,10 @@ def test_post_create_view(client):
 
     subrabble = SubRabbleFactory.create(rabble_id=community)
 
-    url = reverse('post-create', kwargs={'subrabble_community_id': subrabble.subrabble_community_id})
+    url = reverse('post-create', kwargs={
+        'community_id': community.community_id,
+        'subrabble_community_id': subrabble.subrabble_community_id
+    })
     form_data = {
         'title': 'My New Post',
         'body': 'Hello, world!',
@@ -71,6 +77,10 @@ def test_post_create_view(client):
 
     expected = reverse(
         'post-detail',
-        kwargs={'subrabble_community_id': subrabble.subrabble_community_id, 'pk': post.pk}
+        kwargs={
+            'community_id': community.community_id,
+            'subrabble_community_id': subrabble.subrabble_community_id,
+            'pk': post.pk
+        }
     )
     assert response.url.endswith(expected)
