@@ -5,24 +5,42 @@
   <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
     <div class="card-body">
       <h2 class="card-title text-center mb-4 text-rabble">Login to Rabble</h2>
-      <form method="post" novalidate>
+      <form method="post" novalidate class="needs-validation">
         {% csrf_token %}
-        {{ form.non_field_errors }}
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
 
         <div class="mb-3">
           <label for="id_username" class="form-label">Username</label>
           <input type="text" name="username" autofocus required id="id_username"
                  class="form-control rabble-input">
+          {% if form.username.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.username.errors }}
+            </div>
+          {% endif %}
         </div>
 
         <div class="mb-3">
           <label for="id_password" class="form-label">Password</label>
           <input type="password" name="password" required id="id_password"
                  class="form-control rabble-input">
+          {% if form.password.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.password.errors }}
+            </div>
+          {% endif %}
         </div>
 
         <button type="submit" class="btn btn-login w-100">Login</button>
       </form>
+      <div class="text-center mt-3">
+        <p class="mb-0">Don't have an account? <a href="{% url 'register' %}" class="text-rabble">Create one</a></p>
+      </div>
     </div>
   </div>
 </div>

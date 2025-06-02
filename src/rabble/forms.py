@@ -1,5 +1,6 @@
 from django import forms
 from .models import Post, Comment, SubRabble, User
+from django.contrib.auth.forms import UserCreationForm
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -96,3 +97,35 @@ class SubRabbleForm(forms.ModelForm):
             self.fields['members'].queryset = rabble.members.all()
         else:
             self.fields['members'].queryset = User.objects.none()
+
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+        labels = {
+            'password1': 'Password',
+            'password2': 'Confirm Password'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Style all fields with Bootstrap classes
+        for field_name in ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']:
+            placeholder = {
+                'password1': 'Enter your password',
+                'password2': 'Confirm your password'
+            }.get(field_name, f'Enter your {field_name.replace("_", " ").title()}')
+            
+            self.fields[field_name].widget.attrs.update({
+                'class': 'form-control rabble-input',
+                'placeholder': placeholder
+            })
+            # Remove the default label suffix
+            self.fields[field_name].label_suffix = ''
+            # Set the label class
+            if field_name not in ['password1', 'password2']:
+                self.fields[field_name].label = field_name.replace('_', ' ').title()

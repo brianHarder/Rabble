@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from django.contrib import messages
 from .models import Rabble, SubRabble, Post, Comment
-from .forms import PostForm, CommentForm, SubRabbleForm
+from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm
 
 @login_required
 def profile(request):
@@ -257,3 +258,14 @@ def comment_delete(request, community_id, subrabble_community_id, post_id, pk):
         'comment': comment
     }
     return render(request, "rabble/comment_delete.html", context)
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, 'Account created successfully! You can now log in.')
+            return redirect('login')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'registration/register.html', {'form': form})

@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("profile", views.profile, name="profile"),
+    path("register/", views.register, name="register"),
     path("<slug:community_id>/", views.rabble_detail, name="rabble-detail"),
     path("<slug:community_id>/!<slug:subrabble_community_id>/", views.subrabble_detail, name="subrabble-detail"),
     path("<slug:community_id>/new", views.subrabble_create, name="subrabble-create"),
