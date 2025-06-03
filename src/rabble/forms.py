@@ -130,6 +130,17 @@ class UserRegistrationForm(UserCreationForm):
             if field_name not in ['password1', 'password2']:
                 self.fields[field_name].label = field_name.replace('_', ' ').title()
 
+    def clean(self):
+        cleaned_data = super().clean()
+        # Only add our custom validation if there are no existing errors
+        if not self.errors:
+            # Check required fields in order
+            for field in ['email', 'first_name', 'last_name', 'username', 'password1', 'password2']:
+                if not cleaned_data.get(field):
+                    self.add_error(field, f'This field is required.')
+                    break  # Stop at the first empty field
+        return cleaned_data
+
 class CustomLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -196,3 +207,47 @@ class RabbleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['members'].queryset = User.objects.all()
+
+class ForgotPasswordForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your username'
+        })
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your email'
+        })
+    )
+    new_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter new password'
+        })
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirm new password'
+        })
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+        new_password = cleaned_data.get('new_password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if username and email:
+            try:
+                user = User.objects.get(username=username, email=email)
+            except User.DoesNotExist:
+                raise forms.ValidationError("No account found with this username and email combination.")
+        
+        if new_password and confirm_password and new_password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+
+        return cleaned_data

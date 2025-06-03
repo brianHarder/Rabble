@@ -1,5 +1,7 @@
 {% extends "rabble/base.html" %}
 
+{% block title %}Login{% endblock %}
+
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
   <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
@@ -32,6 +34,10 @@
               {{ form.password.errors|striptags }}
             </div>
           {% endif %}
+        </div>
+
+        <div class="mb-3 text-end">
+          <a href="{% url 'forgot-password' %}" class="text-rabble text-decoration-none">Forgot Password?</a>
         </div>
 
         <button type="submit" class="btn btn-login w-100">Login</button>

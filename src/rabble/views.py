@@ -4,8 +4,8 @@ from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Rabble, SubRabble, Post, Comment
-from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm
+from .models import Rabble, SubRabble, Post, Comment, User
+from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm, ForgotPasswordForm
 
 @login_required
 def profile(request):
@@ -332,3 +332,22 @@ def login_view(request):
     else:
         form = CustomLoginForm()
     return render(request, 'registration/login.html', {'form': form})
+
+def forgot_password(request):
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            new_password = form.cleaned_data['new_password']
+            
+            user = User.objects.get(username=username, email=email)
+            user.set_password(new_password)
+            user.save()
+            
+            messages.success(request, 'Your password has been reset successfully. You can now log in with your new password.')
+            return redirect('login')
+    else:
+        form = ForgotPasswordForm()
+    
+    return render(request, 'rabble/forgot_password.html', {'form': form})

@@ -8,6 +8,7 @@ urlpatterns = [
     path("profile", views.profile, name="profile"),
     path("register/", views.register, name="register"),
     path("login/", views.login_view, name="login"),
+    path("forgot-password/", views.forgot_password, name="forgot-password"),
     path("new", views.rabble_create, name="rabble-create"),
     path("<slug:community_id>/", views.rabble_detail, name="rabble-detail"),
     path("<slug:community_id>/edit", views.rabble_edit, name="rabble-edit"),
