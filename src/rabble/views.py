@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
 from .models import Rabble, SubRabble, Post, Comment
-from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm
+from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm
 
 @login_required
 def profile(request):
@@ -26,6 +28,51 @@ def rabble_detail(request, community_id):
         'subrabbles': subrabbles
     }
     return render(request, "rabble/rabble_detail.html", context)
+
+@login_required
+def rabble_create(request):
+    if request.method == "POST":
+        form = RabbleForm(request.POST)
+        if form.is_valid():
+            rabble = form.save(commit=False)
+            rabble.owner = request.user
+            rabble.save()
+            form.save_m2m()  # Save the many-to-many relationships (members)
+            return redirect("rabble-detail", community_id=rabble.community_id)
+    else:
+        form = RabbleForm()
+    
+    return render(request, "rabble/rabble_form.html", {'form': form})
+
+@login_required
+def rabble_edit(request, community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    
+    if request.user != rabble.owner:
+        return HttpResponseForbidden("You cannot edit this Rabble.")
+
+    if request.method == "POST":
+        form = RabbleForm(request.POST, instance=rabble)
+        if form.is_valid():
+            form.save()
+            return redirect("rabble-detail", community_id=rabble.community_id)
+    else:
+        form = RabbleForm(instance=rabble)
+    
+    return render(request, "rabble/rabble_form.html", {'form': form, 'rabble': rabble})
+
+@login_required
+def rabble_delete(request, community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    
+    if request.user != rabble.owner:
+        return HttpResponseForbidden("You cannot delete this Rabble.")
+
+    if request.method == "POST":
+        rabble.delete()
+        return redirect("index")
+
+    return render(request, "rabble/rabble_delete.html", {'rabble': rabble})
 
 @login_required
 def subrabble_create(request, community_id):
@@ -269,3 +316,19 @@ def register(request):
     else:
         form = UserRegistrationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+            else:
+                form.add_error(None, 'Invalid username or password')
+    else:
+        form = CustomLoginForm()
+    return render(request, 'registration/login.html', {'form': form})

@@ -5,6 +5,11 @@ class Rabble(models.Model):
     community_id = models.TextField(unique=True)
     owner = models.ForeignKey('User', on_delete=models.CASCADE)
     members = models.ManyToManyField('User', related_name="joined_rabbles")
+    description = models.TextField()
+    private = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.community_id
 
 class SubRabble(models.Model):
     subrabble_community_id = models.CharField(max_length=200, unique=True)

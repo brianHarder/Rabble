@@ -1,6 +1,6 @@
 from django import forms
-from .models import Post, Comment, SubRabble, User
-from django.contrib.auth.forms import UserCreationForm
+from .models import Post, Comment, SubRabble, User, Rabble
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -129,3 +129,70 @@ class UserRegistrationForm(UserCreationForm):
             # Set the label class
             if field_name not in ['password1', 'password2']:
                 self.fields[field_name].label = field_name.replace('_', ' ').title()
+
+class CustomLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Style all fields with Bootstrap classes
+        for field_name in ['username', 'password']:
+            placeholder = {
+                'password': 'Enter your password'
+            }.get(field_name, f'Enter your {field_name}')
+            
+            self.fields[field_name].widget.attrs.update({
+                'class': 'form-control rabble-input',
+                'placeholder': placeholder
+            })
+            # Remove the default label suffix
+            self.fields[field_name].label_suffix = ''
+            # Set the label class
+            self.fields[field_name].label = field_name.replace('_', ' ').title()
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not password:
+            raise forms.ValidationError('Please enter your password')
+        return password
+
+class RabbleForm(forms.ModelForm):
+    members = forms.ModelMultipleChoiceField(
+        queryset=User.objects.none(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label="Members"
+    )
+
+    class Meta:
+        model = Rabble
+        fields = [
+            'community_id',
+            'description',
+            'private',
+            'members',
+        ]
+        widgets = {
+            'community_id': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter community ID (no spaces allowed)…',
+                'pattern': '[^\\s]*',
+                'title': 'Community ID cannot contain spaces'
+            }),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is this Rabble about?'}),
+            'private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'community_id': 'Community ID',
+            'description': 'Description',
+            'private': 'Private Rabble?',
+            'members': 'Members',
+        }
+
+    def clean_community_id(self):
+        community_id = self.cleaned_data.get('community_id')
+        if ' ' in community_id:
+            raise forms.ValidationError("Community ID cannot contain spaces.")
+        return community_id
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['members'].queryset = User.objects.all()

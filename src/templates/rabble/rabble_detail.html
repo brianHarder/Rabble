@@ -8,10 +8,21 @@
 </div>
 
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>{{ rabble.community_id }}</h2>
-    <a href="{% url 'subrabble-create' rabble.community_id %}" class="btn btn-primary">
-      New SubRabble
-    </a>
+    <div>
+      <h2>{{ rabble.community_id }}</h2>
+      <p class="text-muted">{{ rabble.description }}</p>
+    </div>
+    <div class="d-flex flex-column gap-2">
+      {% if user.is_authenticated and user == rabble.owner %}
+        <div class="d-flex gap-2">
+          <a href="{% url 'rabble-edit' rabble.community_id %}" class="btn btn-outline-secondary">Edit Rabble</a>
+          <a href="{% url 'rabble-delete' rabble.community_id %}" class="btn btn-outline-danger">Delete Rabble</a>
+        </div>
+      {% endif %}
+      <a href="{% url 'subrabble-create' rabble.community_id %}" class="btn btn-primary">
+        New SubRabble
+      </a>
+    </div>
   </div>
 
   {% if subrabbles %}

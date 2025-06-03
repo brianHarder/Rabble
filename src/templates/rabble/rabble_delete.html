@@ -1,0 +1,18 @@
+{% extends "rabble/base.html" %}
+
+{% block title %}
+  Confirm Delete
+{% endblock %}
+
+{% block content %}
+  <div class="text-center mt-5">
+    <h2>Are you sure you want to delete {{ rabble.community_id }}?</h2>
+    <form method="post" class="mt-4">
+      {% csrf_token %}
+      <div class="d-flex justify-content-center gap-3">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'rabble-detail' rabble.community_id %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %} 

@@ -1,0 +1,57 @@
+{% extends "rabble/base.html" %}
+
+{% block title %}
+  {% if form.instance.pk %}Edit Rabble{% else %}New Rabble{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="mt-4">
+    <h2>
+      {% if form.instance.pk %}Edit Rabble{% else %}New Rabble{% endif %}
+    </h2>
+
+    <form method="post" class="mt-3">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="mb-3">
+        {{ form.community_id.label_tag }}
+        {{ form.community_id }}
+        {{ form.community_id.errors }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {{ form.description.errors }}
+      </div>
+
+      <div class="form-check mb-4">
+        {{ form.private }}
+        {{ form.private.label_tag }}
+        {{ form.private.errors }}
+      </div>
+
+      <div id="members-field" class="mb-4" style="display: none;">
+        {{ form.members.label_tag }}
+        {{ form.members }}
+        {{ form.members.errors }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        {% if form.instance.pk %}Save Changes{% else %}Create Rabble{% endif %}
+      </button>
+
+      {% if form.instance.pk %}
+        <a href="{% url 'rabble-detail' form.instance.community_id %}" class="btn btn-secondary ms-2">Cancel</a>
+      {% else %}
+        <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Cancel</a>
+      {% endif %}
+    </form>
+  </div>
+{% endblock %} 
