@@ -63,3 +63,31 @@ document.addEventListener("DOMContentLoaded", function() {
   priv.addEventListener("change", toggle);
   toggle();
 });
+
+// Password visibility toggle functionality
+function initializePasswordToggles() {
+    const passwordFields = document.querySelectorAll('input[type="password"]');
+    passwordFields.forEach(field => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'input-group';
+        field.parentNode.insertBefore(wrapper, field);
+        wrapper.appendChild(field);
+        
+        const toggleButton = document.createElement('button');
+        toggleButton.className = 'btn btn-outline-secondary';
+        toggleButton.type = 'button';
+        toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+        wrapper.appendChild(toggleButton);
+        
+        toggleButton.addEventListener('click', function() {
+            const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+            field.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+        });
+    });
+}
+
+// Initialize password toggles when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializePasswordToggles();
+});

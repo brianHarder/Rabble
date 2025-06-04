@@ -1,11 +1,12 @@
 {% extends "rabble/base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
   <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
     <div class="card-body">
       <h2 class="card-title text-center mb-4 text-rabble">Create an Account</h2>
-      <form method="post" novalidate class="needs-validation">
+      <form method="post" novalidate class="needs-validation" enctype="multipart/form-data">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
@@ -13,6 +14,21 @@
             {{ form.non_field_errors }}
           </div>
         {% endif %}
+
+        <div class="mb-4 text-center">
+          <div class="profile-pic-container mb-3 mx-auto">
+            <img src="{% static 'images/default.png' %}" alt="Default profile picture" class="profile-pic-large">
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Profile Picture (Optional)</label>
+            {{ form.profile_picture }}
+            {% if form.profile_picture.errors %}
+              <div class="text-danger small mt-1">
+                {{ form.profile_picture.errors|striptags }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
 
         <div class="mb-3">
           <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>

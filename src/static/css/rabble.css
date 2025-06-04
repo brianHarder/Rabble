@@ -72,3 +72,38 @@ div .subrabbles-title {
 #like-btn.liked i {
 color: blue;
 }
+
+/* Profile picture styles */
+.profile-pic-link {
+  display: block;
+  text-decoration: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-pic-link:hover {
+  transform: scale(1.1);
+}
+
+/* Profile page specific styles */
+.profile-pic-container {
+  width: 8rem;
+  height: 8rem;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-pic-large {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -29,7 +29,7 @@ class Chat(models.Model):
 
 class User(AbstractUser):
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='images/', default='static/images/default.png')
     follows = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
     invites = models.ManyToManyField('self', symmetrical=False, related_name='invitations', blank=True)
     added_to_chat = models.ManyToManyField(Chat, blank=True)

@@ -2,14 +2,42 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Rabble, SubRabble, Post, Comment, User
-from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm, ForgotPasswordForm
+from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm, ForgotPasswordForm, ProfileEditForm
 
 @login_required
 def profile(request):
-    return render(request, "rabble/profile.html")
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            # Check if we should reset the profile picture
+            if request.POST.get('reset_profile_picture'):
+                request.user.profile_picture = 'images/default.png'
+                request.user.save()
+                messages.success(request, 'Your profile picture has been reset to default.')
+                return redirect('profile')
+            
+            # Check if password is being changed
+            if form.cleaned_data.get('new_password'):
+                # Update password without logging out
+                request.user.set_password(form.cleaned_data['new_password'])
+                request.user.save()
+                # Update the session to prevent logout
+                update_session_auth_hash(request, request.user)
+            else:
+                # Regular profile update
+                form.save()
+            messages.success(request, 'Your profile has been updated successfully!')
+            return redirect('profile')
+    else:
+        form = ProfileEditForm(instance=request.user)
+    
+    return render(request, "rabble/profile.html", {
+        'form': form,
+        'user': request.user
+    })
 
 @login_required
 def index(request):
@@ -308,7 +336,7 @@ def comment_delete(request, community_id, subrabble_community_id, post_id, pk):
 
 def register(request):
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+        form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             messages.success(request, 'Account created successfully! You can now log in.')

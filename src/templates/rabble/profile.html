@@ -1,8 +1,170 @@
 {% extends "rabble/base.html" %}
+{% load static %}
 
 {% block content %}
-<p>
-    <b>Username: </b>{{user.username}} <br>
-    <b>E-mail address: </b>{{user.email}}
-</p>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Profile Settings</h3>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4 text-center">
+                            <div class="profile-pic-container mb-3">
+                                {% if user.profile_picture.name == 'images/default.png' %}
+                                    <img src="{% static 'images/default.png' %}" alt="{{ user.username }}'s profile picture" class="profile-pic-large">
+                                {% else %}
+                                    <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s profile picture" class="profile-pic-large">
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <div class="flex-grow-1">
+                                        {{ form.profile_picture }}
+                                    </div>
+                                    {% if user.profile_picture.name != 'images/default.png' %}
+                                        <button type="button" class="btn btn-outline-secondary flex-shrink-0" onclick="resetProfilePicture()">Reset to Default</button>
+                                    {% endif %}
+                                </div>
+                                {% if form.profile_picture.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.profile_picture.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Personal Information</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.first_name.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.last_name.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Account Information</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                                    {{ form.username }}
+                                    {% if form.username.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.username.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.email.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="card-title mb-3">Change Password</h5>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label for="{{ form.current_password.id_for_label }}" class="form-label">Current Password</label>
+                                    {{ form.current_password }}
+                                    {% if form.current_password.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.current_password.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.new_password.id_for_label }}" class="form-label">New Password</label>
+                                    {{ form.new_password }}
+                                    {% if form.new_password.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.new_password.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.confirm_password.id_for_label }}" class="form-label">Confirm New Password</label>
+                                    {{ form.confirm_password }}
+                                    {% if form.confirm_password.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.confirm_password.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+
+                    {% block extra_js %}
+                    <script>
+                        function resetProfilePicture() {
+                            // Get the profile form specifically
+                            const profileForm = document.querySelector('form[enctype="multipart/form-data"]');
+                            
+                            // Create a hidden input to indicate we want to reset to default
+                            const resetInput = document.createElement('input');
+                            resetInput.type = 'hidden';
+                            resetInput.name = 'reset_profile_picture';
+                            resetInput.value = 'true';
+                            
+                            // Add it to the form
+                            profileForm.appendChild(resetInput);
+                            
+                            // Submit the form
+                            profileForm.submit();
+                        }
+                    </script>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
