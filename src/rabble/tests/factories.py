@@ -11,7 +11,7 @@ class UserFactory(DjangoModelFactory):
     first_name = Faker("first_name")
     last_name = Faker("last_name")
     bio = Faker("sentence")
-    profile_picture = ""
+    profile_picture = "images/default.png"
     date_joined = Faker("date_time_this_year", before_now=True, after_now=True)
     password = PostGenerationMethodCall("set_password", "password")
 
