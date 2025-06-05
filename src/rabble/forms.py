@@ -337,7 +337,7 @@ class ProfileEditForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        user = supe9r().save(commit=False)
+        user = super().save(commit=False)
         if self.cleaned_data.get('new_password'):
             user.set_password(self.cleaned_data['new_password'])
         if commit:
