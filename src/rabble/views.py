@@ -107,15 +107,18 @@ def subrabble_create(request, community_id):
     rabble = get_object_or_404(Rabble, community_id=community_id)
 
     if request.method == "POST":
-        form = SubRabbleForm(request.POST)
+        form = SubRabbleForm(request.POST, rabble=rabble)
         if form.is_valid():
             subrabble = form.save(commit=False)
             subrabble.rabble_id = rabble
             subrabble.user_id = request.user
             subrabble.save()
+            # Save the many-to-many relationships
+            form.save_m2m()
             return redirect("subrabble-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id)
     else:
         form = SubRabbleForm(rabble=rabble)
+        form.current_user = request.user
     
     context = {
         'form': form,

@@ -94,7 +94,16 @@ class SubRabbleForm(forms.ModelForm):
     def __init__(self, *args, rabble=None, **kwargs):
         super().__init__(*args, **kwargs)
         if rabble:
-            self.fields['members'].queryset = rabble.members.all()
+            # If the rabble is private, only show its members
+            # Otherwise show all users
+            if rabble.private:
+                self.fields['members'].queryset = rabble.members.all()
+            else:
+                self.fields['members'].queryset = User.objects.all()
+            
+            # If this is a new subrabble (no instance), set the initial members to include the current user
+            if not self.instance.pk:
+                self.initial['members'] = [self.current_user.id] if hasattr(self, 'current_user') else []
         else:
             self.fields['members'].queryset = User.objects.none()
 
@@ -328,7 +337,7 @@ class ProfileEditForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        user = super().save(commit=False)
+        user = supe9r().save(commit=False)
         if self.cleaned_data.get('new_password'):
             user.set_password(self.cleaned_data['new_password'])
         if commit:
