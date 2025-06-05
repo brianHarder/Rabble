@@ -144,7 +144,7 @@ def subrabble_edit(request, community_id, subrabble_community_id):
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
 
     if request.method == "POST":
-        form = SubRabbleForm(request.POST, instance=subrabble)
+        form = SubRabbleForm(request.POST, instance=subrabble, rabble=rabble)
         if form.is_valid():
             form.save()
             return redirect("subrabble-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id)

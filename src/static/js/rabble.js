@@ -54,11 +54,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
+  // Handle private checkbox and members list for both rabble and subrabble forms
   var priv = document.getElementById("id_private");
   var members = document.getElementById("members-field");
   if (!priv || !members) return;
+
   function toggle() {
     members.style.display = priv.checked ? "block" : "none";
+    if (priv.checked) {
+      // Find the current user's checkbox and make it checked and disabled
+      var currentUserId = document.querySelector('meta[name="user-id"]').content;
+      var userCheckbox = document.querySelector(`input[name="members"][value="${currentUserId}"]`);
+      if (userCheckbox) {
+        userCheckbox.checked = true;
+        userCheckbox.disabled = true;
+        // Add a hidden input to ensure the value is still submitted
+        var hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'members';
+        hiddenInput.value = currentUserId;
+        userCheckbox.parentNode.appendChild(hiddenInput);
+      }
+    }
   }
   priv.addEventListener("change", toggle);
   toggle();
