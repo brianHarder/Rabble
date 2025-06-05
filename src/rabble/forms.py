@@ -67,9 +67,9 @@ class SubRabbleForm(forms.ModelForm):
         widgets = {
             'subrabble_community_id': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter community ID (no spaces allowed)…',
-                'pattern': '[^\\s]*',
-                'title': 'Community ID cannot contain spaces'
+                'placeholder': 'Enter community ID (letters, numbers, and dashes only)…',
+                'pattern': '[a-zA-Z0-9-]*',
+                'title': 'Community ID can only contain letters, numbers, and dashes'
             }),
             'subrabble_name':      forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter sub-Rabble name…'}),
             'description':         forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is this sub-Rabble about?'}),
@@ -87,8 +87,8 @@ class SubRabbleForm(forms.ModelForm):
 
     def clean_subrabble_community_id(self):
         community_id = self.cleaned_data.get('subrabble_community_id')
-        if ' ' in community_id:
-            raise forms.ValidationError("Community ID cannot contain spaces.")
+        if not community_id.replace('-', '').isalnum():
+            raise forms.ValidationError("Community ID can only contain letters, numbers, and dashes.")
         return community_id
 
     def __init__(self, *args, rabble=None, **kwargs):
@@ -200,9 +200,9 @@ class RabbleForm(forms.ModelForm):
         widgets = {
             'community_id': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Enter community ID (no spaces allowed)…',
-                'pattern': '[^\\s]*',
-                'title': 'Community ID cannot contain spaces'
+                'placeholder': 'Enter community ID (letters, numbers, and dashes only)…',
+                'pattern': '[a-zA-Z0-9-]*',
+                'title': 'Community ID can only contain letters, numbers, and dashes'
             }),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is this Rabble about?'}),
             'private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -216,8 +216,8 @@ class RabbleForm(forms.ModelForm):
 
     def clean_community_id(self):
         community_id = self.cleaned_data.get('community_id')
-        if ' ' in community_id:
-            raise forms.ValidationError("Community ID cannot contain spaces.")
+        if not community_id.replace('-', '').isalnum():
+            raise forms.ValidationError("Community ID can only contain letters, numbers, and dashes.")
         return community_id
 
     def __init__(self, *args, **kwargs):
