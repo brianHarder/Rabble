@@ -1,34 +1,31 @@
 {% extends "rabble/base.html" %}
+{% load static %}
 
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Rabbles</h2>
-    {% if user.is_authenticated %}
-      <a href="{% url 'rabble-create' %}" class="btn btn-primary">New Rabble</a>
-    {% endif %}
-  </div>
-
+<div class="rabble-grid">
   {% if rabbles %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-      {% for rabble in rabbles %}
-        {% if not rabble.private or user in rabble.members.all %}
-        <div class="col">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">{{ rabble.community_id }}</h5>
-              <p class="card-text">{{ rabble.description }}</p>
-              <a href="{% url 'rabble-detail' rabble.community_id %}" class="btn btn-primary">
-                View
-              </a>
-            </div>
+    {% for rabble in rabbles %}
+      {% if not rabble.private or user in rabble.members.all %}
+        <a href="{% url 'rabble-detail' rabble.community_id %}" class="rabble-card pattern-{% cycle '1' '2' '3' '4' '5' '6' '7' '8' '9' '10' %}">
+          <div class="geometric-pattern pattern-svg-{% cycle '1' '2' '3' '4' '5' '6' '7' '8' '9' '10' %}"></div>
+          <div class="rabble-content">
+            <h2 class="rabble-title">{{ rabble.community_id }}</h2>
+            <p class="rabble-description">{{ rabble.description }}</p>
           </div>
-        </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+        </a>
+      {% endif %}
+    {% endfor %}
   {% else %}
-    <div class="alert alert-info">
-      No rabbles yet. Create one to get started!
+    <div class="no-rabbles">
+      <h2>No rabbles yet</h2>
+      <p>Create one to get started!</p>
     </div>
   {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+  <a href="{% url 'rabble-create' %}" class="btn btn-primary new-rabble-btn">
+    <i class="bi bi-plus-lg me-2"></i>New Rabble
+  </a>
+{% endif %}
 {% endblock content %}

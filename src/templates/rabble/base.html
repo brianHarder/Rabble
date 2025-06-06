@@ -77,12 +77,10 @@
         </div>
       </div>
     </nav>
-    <div class="container py-5">
-        <div class="main-content">
-            {% block content %}
-            <!-- Page-specific content goes here -->
-            {% endblock %}
-        </div>
-    </div>
+    <main class="main-content">
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+    </main>
   </body>
 </html>

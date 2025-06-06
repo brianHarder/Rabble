@@ -107,3 +107,236 @@ color: blue;
   height: 100%;
   object-fit: cover;
 }
+
+/* Index page styles */
+
+.rabble-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    padding: 1rem;
+    min-height: calc(100vh - 72px);
+  }
+
+  @media (min-width: 768px) {
+    .rabble-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      padding: 2rem;
+    }
+  }
+
+  .rabble-card {
+    position: relative;
+    aspect-ratio: 16/9;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .rabble-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .rabble-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+      rgba(255, 255, 255, 0.1) 25%, 
+      transparent 25%, 
+      transparent 50%, 
+      rgba(255, 255, 255, 0.1) 50%, 
+      rgba(255, 255, 255, 0.1) 75%, 
+      transparent 75%, 
+      transparent);
+    background-size: 100px 100px;
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
+  }
+
+  .rabble-card:hover::before {
+    opacity: 0.2;
+    animation: movePattern 20s linear infinite;
+  }
+
+  .rabble-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+    color: white;
+  }
+
+  @media (min-width: 768px) {
+    .rabble-content {
+      padding: 2rem;
+    }
+  }
+
+  .rabble-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  @media (min-width: 768px) {
+    .rabble-title {
+      font-size: 2rem;
+    }
+  }
+
+  .rabble-description {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin: 0.75rem 0;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 768px) {
+    .rabble-description {
+      font-size: 1.1rem;
+      margin: 1rem 0;
+    }
+  }
+
+  .new-rabble-btn {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .new-rabble-btn {
+      bottom: 2rem;
+      right: 2rem;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+  }
+
+  .new-rabble-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+
+  @keyframes movePattern {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100px 100px;
+    }
+  }
+
+  .geometric-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.25;
+    background-size: 50px 50px;
+    transition: opacity 0.3s ease;
+  }
+
+  .rabble-card:hover .geometric-pattern {
+    opacity: 0.35;
+  }
+
+  .no-rabbles {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 20px;
+    font-size: 1.1rem;
+  }
+
+  @media (min-width: 768px) {
+    .no-rabbles {
+      padding: 4rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  /* Color variations for patterns */
+  .pattern-1 { background-color: #E63946; }
+  .pattern-2 { background-color: #2A9D8F; }
+  .pattern-3 { background-color: #264653; }
+  .pattern-4 { background-color: #457B9D; }
+  .pattern-5 { background-color: #1D3557; }
+  .pattern-6 { background-color: #E76F51; }
+  .pattern-7 { background-color: #2A9D8F; }
+  .pattern-8 { background-color: #E63946; }
+  .pattern-9 { background-color: #264653; }
+  .pattern-10 { background-color: #457B9D; }
+
+  /* Pattern variations */
+  .pattern-svg-1 {
+    /* Traditional grid pattern with concentric circles */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Ccircle cx='25' cy='25' r='15' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Ccircle cx='25' cy='25' r='10' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Cpath d='M5 25h40M25 5v40' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-2 {
+    /* Diagonal wave pattern - variation 1 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M0 10 Q12.5 0, 25 10 Q37.5 20, 50 10 M0 30 Q12.5 20, 25 30 Q37.5 40, 50 30' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Cpath d='M0 20 Q12.5 10, 25 20 Q37.5 30, 50 20 M0 40 Q12.5 30, 25 40 Q37.5 50, 50 40' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-3 {
+    /* Spiral pattern - variation 1 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M25 25 Q25 15, 35 15 Q45 15, 45 25 Q45 35, 35 35 Q25 35, 25 25 Q25 20, 30 20 Q35 20, 35 25 Q35 30, 30 30 Q25 30, 25 25' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-4 {
+    /* Hexagonal grid pattern - variation 1 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M25 5 L40 15 L40 35 L25 45 L10 35 L10 15 Z' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Cpath d='M25 15 L35 22 L35 32 L25 39 L15 32 L15 22 Z' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-5 {
+    /* Radial burst pattern - variation 1 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M25 5 L25 20 M25 30 L25 45 M5 25 L20 25 M30 25 L45 25 M10 10 L20 20 M30 30 L40 40 M10 40 L20 30 M30 20 L40 10' stroke='%23FFFFFF' fill='none' stroke-width='3'/%3E%3Ccircle cx='25' cy='25' r='8' stroke='%23FFFFFF' fill='none' stroke-width='3'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-6 {
+    /* Zigzag pattern */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M0 10 L10 20 L20 10 L30 20 L40 10 L50 20 M0 30 L10 40 L20 30 L30 40 L40 30 L50 40' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-7 {
+    /* Diamond grid pattern */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M25 5 L40 25 L25 45 L10 25 Z' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Cpath d='M25 15 L35 25 L25 35 L15 25 Z' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-8 {
+    /* Concentric squares pattern */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M10 10 L40 10 L40 40 L10 40 Z' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Cpath d='M15 15 L35 15 L35 35 L15 35 Z' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Cpath d='M20 20 L30 20 L30 30 L20 30 Z' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-9 {
+    /* Star burst pattern */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M25 5 L25 20 M25 30 L25 45 M5 25 L20 25 M30 25 L45 25 M10 10 L20 20 M30 30 L40 40 M10 40 L20 30 M30 20 L40 10 M25 5 L15 15 M25 5 L35 15 M25 45 L15 35 M25 45 L35 35' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Ccircle cx='25' cy='25' r='8' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }
+
+  .pattern-svg-10 {
+    /* Circular wave pattern */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M25 5 Q35 5, 40 15 Q45 25, 40 35 Q35 45, 25 45 Q15 45, 10 35 Q5 25, 10 15 Q15 5, 25 5' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3Cpath d='M25 15 Q30 15, 33 20 Q35 25, 33 30 Q30 35, 25 35 Q20 35, 17 30 Q15 25, 17 20 Q20 15, 25 15' stroke='%23FFFFFF' fill='none' stroke-width='2.5'/%3E%3C/svg%3E");
+  }

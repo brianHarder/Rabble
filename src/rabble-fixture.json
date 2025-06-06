@@ -9,6 +9,33 @@
     }
   },
   {
+    "model": "rabble.rabble",
+    "pk": 2,
+    "fields": {
+      "community_id": "first",
+      "owner": 3,
+      "description": "first rabble"
+    }
+  },
+  {
+    "model": "rabble.rabble",
+    "pk": 3,
+    "fields": {
+      "community_id": "second",
+      "owner": 3,
+      "description": "second rabble"
+    }
+  },
+  {
+    "model": "rabble.rabble",
+    "pk": 4,
+    "fields": {
+      "community_id": "third",
+      "owner": 4,
+      "description": "third rabble"
+    }
+  },
+  {
     "model": "rabble.subrabble",
     "pk": 1,
     "fields": {
