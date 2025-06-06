@@ -1,3 +1,5 @@
+# forms.py
+
 from django import forms
 from .models import Post, Comment, SubRabble, User, Rabble
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -134,7 +136,12 @@ class UserRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Style all fields with Bootstrap classes
+
+        # Remove Django’s default “autofocus” on username, if present
+        if 'autofocus' in self.fields['username'].widget.attrs:
+            del self.fields['username'].widget.attrs['autofocus']
+
+        # Apply Bootstrap classes, placeholders, and labels
         for field_name in ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']:
             placeholder = {
                 'password1': 'Enter your password',
@@ -147,9 +154,16 @@ class UserRegistrationForm(UserCreationForm):
             })
             # Remove the default label suffix
             self.fields[field_name].label_suffix = ''
-            # Set the label class
+            # Set a nicer label for non-password fields
             if field_name not in ['password1', 'password2']:
                 self.fields[field_name].label = field_name.replace('_', ' ').title()
+
+        # If the form is bound (submitted) and has errors, autofocus the first field with errors
+        if self.is_bound and self.errors:
+            for field_name in ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']:
+                if field_name in self.errors:
+                    self.fields[field_name].widget.attrs.update({'autofocus': 'autofocus'})
+                    break
 
     def clean(self):
         cleaned_data = super().clean()
