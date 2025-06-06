@@ -1,6 +1,7 @@
 from django import forms
 from .models import Post, Comment, SubRabble, User, Rabble
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django_select2.forms import Select2MultipleWidget
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -50,7 +51,11 @@ class SubRabbleForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
         queryset=User.objects.none(),
         required=False,
-        widget=forms.CheckboxSelectMultiple,
+        widget=Select2MultipleWidget(attrs={
+            'class': 'form-control',
+            'data-placeholder': 'Search and select members...',
+            'style': 'width: 100%;'
+        }),
         label="Members"
     )
 
@@ -185,7 +190,11 @@ class RabbleForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
         queryset=User.objects.none(),
         required=False,
-        widget=forms.CheckboxSelectMultiple,
+        widget=Select2MultipleWidget(attrs={
+            'class': 'form-control',
+            'data-placeholder': 'Search and select members...',
+            'style': 'width: 100%;'
+        }),
         label="Members"
     )
 
@@ -223,6 +232,9 @@ class RabbleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['members'].queryset = User.objects.all()
+        # If this is a new rabble (no instance), set the initial members to include the current user
+        if not self.instance.pk:
+            self.initial['members'] = [self.current_user.id] if hasattr(self, 'current_user') else []
 
 class ForgotPasswordForm(forms.Form):
     username = forms.CharField(

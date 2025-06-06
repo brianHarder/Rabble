@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rabble",
     "rest_framework",
-    "api"
+    "api",
+    "django_select2"
 ]
 
 MIDDLEWARE = [

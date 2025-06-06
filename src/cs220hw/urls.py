@@ -7,7 +7,8 @@ urlpatterns = [
     path("", include("rabble.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("api/", include("api.urls"))
+    path("api/", include("api.urls")),
+    path("select2/", include("django_select2.urls"))
 ]
 
 if settings.DEBUG:

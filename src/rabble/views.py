@@ -66,9 +66,13 @@ def rabble_create(request):
             rabble.owner = request.user
             rabble.save()
             form.save_m2m()  # Save the many-to-many relationships (members)
+            # Add the owner to the members list if not already added
+            if request.user not in rabble.members.all():
+                rabble.members.add(request.user)
             return redirect("rabble-detail", community_id=rabble.community_id)
     else:
         form = RabbleForm()
+        form.current_user = request.user
     
     return render(request, "rabble/rabble_form.html", {'form': form})
 
@@ -113,8 +117,10 @@ def subrabble_create(request, community_id):
             subrabble.rabble_id = rabble
             subrabble.user_id = request.user
             subrabble.save()
-            # Save the many-to-many relationships
-            form.save_m2m()
+            form.save_m2m()  # Save the many-to-many relationships
+            # Add the creator to the members list if not already added
+            if request.user not in subrabble.members.all():
+                subrabble.members.add(request.user)
             return redirect("subrabble-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id)
     else:
         form = SubRabbleForm(rabble=rabble)

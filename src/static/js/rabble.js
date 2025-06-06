@@ -14,7 +14,19 @@ function getCookie(name) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Select2 for member selection
+  if ($('#id_members').length) {
+    $('#id_members').select2({
+      theme: 'bootstrap-5',
+      width: '100%',
+      placeholder: 'Search and select members...',
+      allowClear: true
+    });
+  }
+
   const btn       = document.getElementById('like-btn');
+  if (!btn) return;
+  
   const url       = btn.dataset.likeUrl;
   const username  = btn.dataset.username;
   const csrftoken = getCookie('csrftoken');
@@ -62,18 +74,13 @@ document.addEventListener("DOMContentLoaded", function() {
   function toggle() {
     members.style.display = priv.checked ? "block" : "none";
     if (priv.checked) {
-      // Find the current user's checkbox and make it checked and disabled
+      // Find the current user's option and make it selected
       var currentUserId = document.querySelector('meta[name="user-id"]').content;
-      var userCheckbox = document.querySelector(`input[name="members"][value="${currentUserId}"]`);
-      if (userCheckbox) {
-        userCheckbox.checked = true;
-        userCheckbox.disabled = true;
-        // Add a hidden input to ensure the value is still submitted
-        var hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'members';
-        hiddenInput.value = currentUserId;
-        userCheckbox.parentNode.appendChild(hiddenInput);
+      var userOption = $(`#id_members option[value="${currentUserId}"]`);
+      if (userOption.length) {
+        userOption.prop('selected', true);
+        // Trigger Select2 to update
+        $('#id_members').trigger('change');
       }
     }
   }
