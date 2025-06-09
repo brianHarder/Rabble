@@ -26,28 +26,312 @@
   </div>
 
   {% if subrabbles %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-      {% for sr in subrabbles %}
-        {% if not sr.private or user in sr.members.all %}
-        <div class="col">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">!{{ sr.subrabble_community_id }}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ sr.subrabble_name }}</h6>
-              <p class="card-text">{{ sr.description }}</p>
-              <a href="{% url 'subrabble-detail' rabble.community_id sr.subrabble_community_id %}"
-                 class="btn btn-primary">
-                View
+    <div id="subrabblesCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        {% for sr in subrabbles %}
+          {% if not sr.private or user in sr.members.all %}
+            <button type="button" 
+                    data-bs-target="#subrabblesCarousel" 
+                    data-bs-slide-to="{{ forloop.counter0 }}" 
+                    {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                    aria-label="SubRabble {{ forloop.counter }}"
+                    data-bs-slide="{{ forloop.counter0 }}"></button>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="carousel-inner">
+        {% for sr in subrabbles %}
+          {% if not sr.private or user in sr.members.all %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-slide="{{ forloop.counter0 }}">
+              <a href="{% url 'subrabble-detail' rabble.community_id sr.subrabble_community_id %}" 
+                 class="subrabble-slide {% if sr.private %}private{% endif %}">
+                <div class="slide-content">
+                  <div class="slide-header">
+                    {% if sr.private %}
+                      <span class="private-badge" title="Private SubRabble">
+                        <i class="bi bi-lock-fill"></i>
+                      </span>
+                    {% endif %}
+                  </div>
+                  <div class="slide-body">
+                    <h3 class="slide-title">!{{ sr.subrabble_community_id }}</h3>
+                    <h4 class="slide-subtitle">{{ sr.subrabble_name }}</h4>
+                    <p class="slide-description">{{ sr.description }}</p>
+                  </div>
+                  <div class="slide-footer">
+                    <span class="slide-action">
+                      Explore <i class="bi bi-arrow-right"></i>
+                    </span>
+                  </div>
+                </div>
               </a>
             </div>
-          </div>
-        </div>
-        {% endif %}
-      {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#subrabblesCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#subrabblesCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
   {% else %}
-    <div class="alert alert-info">
-      No subRabbles yet. Create one to get started!
+    <div class="no-subrabbles">
+      <div class="empty-state">
+        <i class="bi bi-collection"></i>
+        <h3>No SubRabbles Yet</h3>
+        <p>Create one to get started!</p>
+      </div>
     </div>
   {% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize the carousel
+  var carousel = new bootstrap.Carousel(document.getElementById('subrabblesCarousel'), {
+    interval: 5000,
+    wrap: true
+  });
+
+  // Ensure carousel controls work properly
+  var carouselElement = document.getElementById('subrabblesCarousel');
+  
+  // Function to update indicators
+  function updateIndicators() {
+    var indicators = carouselElement.querySelectorAll('.carousel-indicators button');
+    var items = carouselElement.querySelectorAll('.carousel-item');
+    
+    // Remove all existing indicators
+    indicators.forEach(indicator => indicator.remove());
+    
+    // Create new indicators for all items
+    items.forEach((item, index) => {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.setAttribute('data-bs-target', '#subrabblesCarousel');
+      button.setAttribute('data-bs-slide-to', index);
+      button.setAttribute('aria-label', 'SubRabble ' + (index + 1));
+      button.setAttribute('data-bs-slide', index);
+      
+      if (index === 0) {
+        button.classList.add('active');
+        button.setAttribute('aria-current', 'true');
+      }
+      
+      carouselElement.querySelector('.carousel-indicators').appendChild(button);
+    });
+  }
+
+  // Update indicators when slide changes
+  carouselElement.addEventListener('slide.bs.carousel', function (e) {
+    var indicators = carouselElement.querySelectorAll('.carousel-indicators button');
+    indicators.forEach(function(indicator, index) {
+      if (index === e.to) {
+        indicator.classList.add('active');
+        indicator.setAttribute('aria-current', 'true');
+      } else {
+        indicator.classList.remove('active');
+        indicator.removeAttribute('aria-current');
+      }
+    });
+  });
+
+  // Initial update of indicators
+  updateIndicators();
+});
+</script>
+
+<style>
+#subrabblesCarousel {
+  margin-top: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.carousel-item {
+  height: 400px;
+}
+
+.subrabble-slide {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  background: white;
+}
+
+.subrabble-slide.private {
+  background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+}
+
+.slide-content {
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.slide-icon {
+  width: 48px;
+  height: 48px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-size: 1.5rem;
+}
+
+.slide-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.slide-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+}
+
+.slide-subtitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin: 0 0 1.5rem 0;
+}
+
+.slide-description {
+  font-size: 1.1rem;
+  color: #495057;
+  margin: 0 auto;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.slide-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.slide-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: #fff3e6;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: #e67e22;
+  transition: all 0.6s ease;
+}
+
+.slide-action i {
+  transition: transform 0.6s ease;
+}
+
+.subrabble-slide:hover .slide-action {
+  background: #ffe0b3;
+  color: #d35400;
+}
+
+.subrabble-slide:hover .slide-action i {
+  transform: translateX(4px);
+}
+
+.private-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 10%;
+  opacity: 0.8;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  padding: 1.5rem;
+}
+
+.carousel-indicators {
+  margin-bottom: 1rem;
+}
+
+.carousel-indicators button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 5px;
+  background-color: #adb5bd;
+  border: none;
+}
+
+.carousel-indicators button.active {
+  background-color: #6c757d;
+}
+
+.no-subrabbles {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.empty-state {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+  color: #adb5bd;
+}
+
+.empty-state h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1rem;
+}
+</style>
 {% endblock content %} 
