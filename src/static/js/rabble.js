@@ -115,3 +115,58 @@ function initializePasswordToggles() {
 document.addEventListener('DOMContentLoaded', function() {
     initializePasswordToggles();
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize the carousel
+  var carousel = new bootstrap.Carousel(document.getElementById('subrabblesCarousel'), {
+    interval: 5000,
+    wrap: true
+  });
+
+  // Ensure carousel controls work properly
+  var carouselElement = document.getElementById('subrabblesCarousel');
+  
+  // Function to update indicators
+  function updateIndicators() {
+    var indicators = carouselElement.querySelectorAll('.carousel-indicators button');
+    var items = carouselElement.querySelectorAll('.carousel-item');
+    
+    // Remove all existing indicators
+    indicators.forEach(indicator => indicator.remove());
+    
+    // Create new indicators for all items
+    items.forEach((item, index) => {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.setAttribute('data-bs-target', '#subrabblesCarousel');
+      button.setAttribute('data-bs-slide-to', index);
+      button.setAttribute('aria-label', 'SubRabble ' + (index + 1));
+      button.setAttribute('data-bs-slide', index);
+      
+      if (index === 0) {
+        button.classList.add('active');
+        button.setAttribute('aria-current', 'true');
+      }
+      
+      carouselElement.querySelector('.carousel-indicators').appendChild(button);
+    });
+  }
+
+  // Update indicators when slide changes
+  carouselElement.addEventListener('slide.bs.carousel', function (e) {
+    var indicators = carouselElement.querySelectorAll('.carousel-indicators button');
+    indicators.forEach(function(indicator, index) {
+      if (index === e.to) {
+        indicator.classList.add('active');
+        indicator.setAttribute('aria-current', 'true');
+      } else {
+        indicator.classList.remove('active');
+        indicator.removeAttribute('aria-current');
+      }
+    });
+  });
+
+  // Initial update of indicators
+  updateIndicators();
+});
