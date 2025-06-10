@@ -235,14 +235,7 @@ def post_edit(request, community_id, subrabble_community_id, pk):
     if request.user != post.user_id:
         return HttpResponseForbidden("You cannot edit other people's posts.")
 
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect("post-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id, pk=post.pk)
-    else:
-        form = PostForm(instance=post)
-
+    form = PostForm(instance=post)
     context = {
         'rabble': rabble,
         'subrabble': subrabble,

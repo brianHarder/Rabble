@@ -1,4 +1,5 @@
 {% extends "rabble/base.html" %}
+{% load static %}
 
 {% block title %}
   {% if form.instance.pk %}Edit Post{% else %}New Post{% endif %}
@@ -13,7 +14,16 @@
     {% endif %}
   </h2>
 
-  <form method="post" class="mt-4">
+  <form method="post" class="mt-4" id="post-form"
+    {% if form.instance.pk %}
+    data-edit-url="{% url 'api-post-editor' rabble.community_id subrabble.subrabble_community_id form.instance.pk %}"
+    data-success-url="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id form.instance.pk %}"
+    {% endif %}>
+
+    {% if form.instance.pk %}
+      <script src="{% static 'js/post-edit.js' %}"></script>
+    {% endif %}
+    
     {% csrf_token %}
 
     <div class="mb-3">

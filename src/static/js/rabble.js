@@ -24,14 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const btn       = document.getElementById('like-btn');
+  const btn = document.getElementById('like-btn');
   if (!btn) return;
   
-  const url       = btn.dataset.likeUrl;
-  const username  = btn.dataset.username;
+  const url = btn.dataset.likeUrl;
+  const username = btn.dataset.username;
   const csrftoken = getCookie('csrftoken');
   const countSpan = document.getElementById('like-count');
-  const icon      = btn.querySelector('i');
 
   if (btn.dataset.liked === 'True') {
     btn.classList.add('liked');
