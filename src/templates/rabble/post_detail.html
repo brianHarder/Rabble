@@ -59,16 +59,29 @@
 
 {% if post.comment_set.count > 0 %}
     <ul class="list-group mb-3">
-        {% for comment in post.comment_set.all %}
+        {% for comment in comments %}
             <li class="list-group-item">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <p>{{ comment.text }}</p>
-                        {% if comment.anonymous %}
-                            <small class="text-muted">By anonymous</small>
-                        {% else %}
-                            <small class="text-muted">By {{ comment.user_id.username }}</small>
-                        {% endif %}
+                        <div class="d-flex align-items-center gap-3">
+                            {% if comment.anonymous %}
+                                <small class="text-muted">By anonymous</small>
+                            {% else %}
+                                <small class="text-muted">By {{ comment.user_id.username }}</small>
+                            {% endif %}
+                            <button
+                                class="btn btn-light p-0 border-0 comment-like-btn"
+                                data-like-url="{% url 'comment-likes' rabble.community_id subrabble.subrabble_community_id post.pk comment.pk %}"
+                                data-username="{{ user.username }}"
+                                data-comment-id="{{ comment.pk }}"
+                                {% if not user.is_authenticated %}disabled title="Log in to like"{% endif %}
+                                data-liked="{{ comment.user_has_liked|yesno:'True,False' }}"
+                            >
+                                <i class="bi bi-hand-thumbs-up-fill"></i>
+                                <span class="comment-like-count">{{ comment.comment_likes.count }}</span>
+                            </button>
+                        </div>
                     </div>
                     {% if user.is_authenticated and user == comment.user_id %}
                         <div class="d-flex flex-column gap-1 ms-3">

@@ -199,11 +199,18 @@ def post_detail(request, community_id, subrabble_community_id, pk):
     if request.user.is_authenticated:
         liked = request.user in post.post_likes.all()
 
+    # Get comments with like information
+    comments = post.comment_set.all()
+    if request.user.is_authenticated:
+        for comment in comments:
+            comment.user_has_liked = request.user in comment.comment_likes.all()
+
     context = {
         'rabble': rabble,
         'subrabble': subrabble,
         'post': post,
-        'liked': liked
+        'liked': liked,
+        'comments': comments
     }
 
     return render(request, "rabble/post_detail.html", context)

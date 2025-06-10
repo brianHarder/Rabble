@@ -163,3 +163,37 @@ def comment_editor(request, community_id, subrabble_community_id, post_id, pk):
     elif request.method == "DELETE":
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@csrf_exempt
+@api_view(['POST'])
+def comment_likes(request, community_id, subrabble_community_id, post_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
+    post = get_object_or_404(Post, pk=post_id, subrabble_id=subrabble)
+    comment = get_object_or_404(Comment, pk=pk, post_id=post)
+
+    username = request.data.get('user')
+    if not username:
+        return Response(
+            {"detail": "Missing required field: user"}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    user = get_object_or_404(User, username=username)
+
+    existing = CommentLike.objects.filter(user=user, comment=comment)
+    if existing.exists():
+        existing.delete()
+        liked = False
+    else:
+        CommentLike.objects.create(user=user, comment=comment)
+        liked = True
+
+    like_count = comment.comment_likes.count()
+
+    return Response(
+        {
+            "liked": liked,
+            "like_count": like_count
+        },
+        status=status.HTTP_200_OK
+    )

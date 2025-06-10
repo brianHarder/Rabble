@@ -64,6 +64,46 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const commentLikeBtns = document.querySelectorAll('.comment-like-btn');
+  const csrftoken = getCookie('csrftoken');
+
+  commentLikeBtns.forEach(btn => {
+      if (btn.dataset.liked === 'True') {
+          btn.classList.add('liked');
+      }
+
+      btn.addEventListener('click', async () => {
+          const username = btn.dataset.username;
+          if (!username) return alert('Log in to like comments');
+
+          try {
+              const res = await fetch(btn.dataset.likeUrl, {
+                  method: 'POST',
+                  credentials: 'same-origin',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': csrftoken,
+                  },
+                  body: JSON.stringify({ user: username }),
+              });
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+              const data = await res.json();
+
+              const countSpan = btn.querySelector('.comment-like-count');
+              countSpan.textContent = data.like_count;
+
+              btn.classList.toggle('liked', data.liked);
+              btn.dataset.liked = data.liked ? 'True' : 'False';
+
+          } catch (err) {
+              console.error('Error toggling like:', err);
+              alert('Sorry, could not toggle like.');
+          }
+      });
+  });
+});
+
 document.addEventListener("DOMContentLoaded", function() {
   // Handle private checkbox and members list for both rabble and subrabble forms
   var priv = document.getElementById("id_private");

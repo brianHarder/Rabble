@@ -528,3 +528,11 @@ color: blue;
     margin: 0;
     font-size: 1rem;
   }
+
+.comment-like-btn i {
+    color: gold;
+}
+
+.comment-like-btn.liked i {
+    color: blue;
+}
