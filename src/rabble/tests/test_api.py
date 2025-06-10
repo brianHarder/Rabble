@@ -29,38 +29,6 @@ def test_subrabble_get(api_client):
 
 
 @pytest.mark.django_db
-def test_post_post(api_client):
-    community = CommunityFactory.create()
-    subrabble = SubRabbleFactory.create(rabble_id=community)
-
-    data = {
-        'title': 'API Test Title',
-        'body': 'API Test Body',
-        'author': community.owner.username,
-        'subrabble': subrabble.subrabble_community_id,
-        'anonymous': False
-    }
-
-    response = api_client.post(
-        reverse('api-post-list', args=[
-            community.community_id,
-            subrabble.subrabble_community_id
-        ]),
-        data,
-        format='json'
-    )
-    assert response.status_code == 201
-
-    post = Post.objects.get(pk=response.data['id'])
-
-    assert post.title == data['title']
-    assert post.body == data['body']
-    assert post.user_id.username == data['author']
-    assert post.subrabble_id.subrabble_community_id == data['subrabble']
-    assert post.anonymous == data['anonymous']
-
-
-@pytest.mark.django_db
 def test_post_patch(api_client):
     community = CommunityFactory.create()
     subrabble = SubRabbleFactory.create(rabble_id=community)

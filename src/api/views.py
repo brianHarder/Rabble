@@ -88,23 +88,6 @@ def subrabble_by_identifier(request, community_id, subrabble_community_id):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-@api_view(['GET', 'POST'])
-def post_list(request, community_id, subrabble_community_id):
-    rabble = get_object_or_404(Rabble, community_id=community_id)
-    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
-
-    if request.method == "GET":
-        posts = Post.objects.filter(subrabble_id=subrabble)
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
-    
-    elif request.method == "POST":
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 @api_view(['GET', 'PATCH', 'DELETE'])
 def post_editor(request, community_id, subrabble_community_id, pk):
     rabble = get_object_or_404(Rabble, community_id=community_id)
