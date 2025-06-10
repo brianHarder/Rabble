@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Rabble, SubRabble, Post, Comment, User
 from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm, ForgotPasswordForm, ProfileEditForm
+from django.db import models
 
 @login_required
 def profile(request):
@@ -49,7 +50,9 @@ def index(request):
 @login_required
 def rabble_detail(request, community_id):
     rabble = get_object_or_404(Rabble, community_id=community_id)
-    subrabbles = SubRabble.objects.filter(rabble_id=rabble)
+    subrabbles = SubRabble.objects.filter(rabble_id=rabble).filter(
+        models.Q(private=False) | models.Q(members=request.user)
+    ).distinct()
     
     context = {
         'rabble': rabble,

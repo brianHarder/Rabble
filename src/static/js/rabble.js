@@ -118,13 +118,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize the carousel
-  var carousel = new bootstrap.Carousel(document.getElementById('subrabblesCarousel'), {
+  var carouselElement = document.getElementById('subrabblesCarousel');
+  if (!carouselElement) return;
+
+  // Only initialize if there are visible items
+  var visibleItems = carouselElement.querySelectorAll('.carousel-item');
+  if (visibleItems.length === 0) return;
+
+  var carousel = new bootstrap.Carousel(carouselElement, {
     interval: 5000,
     wrap: true
   });
-
-  // Ensure carousel controls work properly
-  var carouselElement = document.getElementById('subrabblesCarousel');
   
   // Function to update indicators
   function updateIndicators() {

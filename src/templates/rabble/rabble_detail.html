@@ -43,7 +43,7 @@
       <div class="carousel-inner">
         {% for sr in subrabbles %}
           {% if not sr.private or user in sr.members.all %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-slide="{{ forloop.counter0 }}">
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
               <a href="{% url 'subrabble-detail' rabble.community_id sr.subrabble_community_id %}" 
                  class="subrabble-slide {% if sr.private %}private{% endif %}">
                 <div class="slide-content">
