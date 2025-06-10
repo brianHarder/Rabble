@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rabble.models import SubRabble, Post, User
+from rabble.models import SubRabble, Post, User, Comment
 
 class SubRabbleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,3 +22,19 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'body', 'author', 'subrabble', 'anonymous']
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        source='user_id',
+        slug_field='username',
+        queryset=User.objects.all()
+    )
+   
+    post = serializers.PrimaryKeyRelatedField(
+        source='post_id',
+        queryset=Post.objects.all()
+    )
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'text', 'author', 'post', 'anonymous']

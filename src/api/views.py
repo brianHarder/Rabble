@@ -93,3 +93,25 @@ def post_likes(request, community_id, subrabble_community_id, pk):
         },
         status=status.HTTP_200_OK
     )
+
+@api_view(['GET', 'PATCH', 'DELETE'])
+def comment_editor(request, community_id, subrabble_community_id, post_id, pk):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+    subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
+    post = get_object_or_404(Post, pk=post_id, subrabble_id=subrabble)
+    comment = get_object_or_404(Comment, pk=pk, post_id=post)
+
+    if request.method == "GET":
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+    
+    elif request.method == "PATCH":
+        serializer = CommentSerializer(comment, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == "DELETE":
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
