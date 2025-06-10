@@ -68,7 +68,7 @@ def rabble_create(request):
             rabble = form.save(commit=False)
             rabble.owner = request.user
             rabble.save()
-            form.save_m2m()  # Save the many-to-many relationships (members)
+            form.save_m2m()
             # Add the owner to the members list if not already added
             if request.user not in rabble.members.all():
                 rabble.members.add(request.user)
@@ -154,6 +154,9 @@ def subrabble_detail(request, community_id, subrabble_community_id):
 def subrabble_edit(request, community_id, subrabble_community_id):
     rabble = get_object_or_404(Rabble, community_id=community_id)
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
+
+    if request.user != subrabble.user_id:
+        return HttpResponseForbidden("You cannot edit this SubRabble.")
 
     if request.method == "POST":
         form = SubRabbleForm(request.POST, instance=subrabble, rabble=rabble)

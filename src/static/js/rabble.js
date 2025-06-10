@@ -173,3 +173,15 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initial update of indicators
   updateIndicators();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  const privateCheckbox = document.querySelector('#id_private');
+  const membersField = document.querySelector('#members-field');
+  
+  function updateMembersField() {
+    membersField.style.display = privateCheckbox.checked ? 'block' : 'none';
+  }
+  
+  privateCheckbox.addEventListener('change', updateMembersField);
+  updateMembersField();
+});
