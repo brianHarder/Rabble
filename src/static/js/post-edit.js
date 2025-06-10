@@ -140,4 +140,61 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  const rabbleForm = document.getElementById('rabble-form');
+  if (!rabbleForm) return;
+
+  rabbleForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = new FormData(rabbleForm);
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+      if (key === 'members') {
+        // Handle multiple select for members
+        if (!data.members) data.members = [];
+        data.members.push(value);
+      } else if (key === 'private') {
+        data[key] = value === 'on';
+      } else {
+        data[key] = value;
+      }
+    }
+
+    fetch(rabbleForm.dataset.editUrl, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        // If community_id was changed, we need to update the success URL
+        if (data.community_id && data.community_id !== rabbleForm.dataset.originalCommunityId) {
+          window.location.href = rabbleForm.dataset.successUrl.replace(
+            rabbleForm.dataset.originalCommunityId,
+            data.community_id
+          );
+        } else {
+          window.location.href = rabbleForm.dataset.successUrl;
+        }
+      } else {
+        response.json().then(data => {
+          // Display validation errors
+          Object.keys(data).forEach(field => {
+            const errorElement = document.querySelector(`#id_${field}`).nextElementSibling;
+            if (errorElement) {
+              errorElement.textContent = data[field].join(', ');
+            }
+          });
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
 });

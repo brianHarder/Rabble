@@ -7,13 +7,45 @@ from django.views.decorators.csrf import csrf_exempt
 from rabble.models import *
 from .serializers import *
 
-@api_view(['GET'])
-def subrabble_list(request, community_id):
+@api_view(['GET', 'PATCH'])
+def rabble_by_identifier(request, community_id):
+    rabble = get_object_or_404(Rabble, community_id=community_id)
+
     if request.method == "GET":
-        rabble = get_object_or_404(Rabble, community_id=community_id)
-        subrabbles = SubRabble.objects.filter(rabble_id=rabble)
-        serializer = SubRabbleSerializer(subrabbles, many=True)
+        serializer = RabbleSerializer(rabble)
         return Response(serializer.data)
+    
+    elif request.method == "PATCH":
+        # Check if user is the owner
+        if request.user != rabble.owner:
+            return Response({"error": "You cannot edit this Rabble."}, status=status.HTTP_403_FORBIDDEN)
+        
+        serializer = RabbleSerializer(rabble, data=request.data, partial=True)
+        if serializer.is_valid():
+            # If community_id is being changed, we need to handle it specially
+            if 'community_id' in request.data and request.data['community_id'] != rabble.community_id:
+                new_community_id = request.data['community_id']
+                # Check if the new community_id is valid
+                if not new_community_id.replace('-', '').isalnum():
+                    return Response(
+                        {"community_id": ["Community ID can only contain letters, numbers, and dashes."]},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                # Check if the new community_id is already taken
+                if Rabble.objects.filter(community_id=new_community_id).exists():
+                    return Response(
+                        {"community_id": ["This community ID is already taken."]},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            
+            # Handle members if provided
+            if 'members' in request.data:
+                members = request.data.pop('members')
+                rabble.members.set(members)
+            
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PATCH'])
 def subrabble_by_identifier(request, community_id, subrabble_community_id):
