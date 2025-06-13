@@ -80,3 +80,20 @@ class CommentLike(models.Model):
 
     class Meta:
         unique_together = ['user', 'comment']
+
+class PostRelationship(models.Model):
+    RELATIONSHIP_TYPES = [
+        ('contradicts', 'Contradicts'),
+        ('supports', 'Supports'),
+        ('elaborates', 'Elaborates'),
+        ('questions', 'Questions'),
+        ('transitions', 'Transitions'),
+        ('none', 'None')
+    ]
+    
+    source_post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='outgoing_relationships')
+    target_post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='incoming_relationships')
+    relationship_type = models.CharField(max_length=20, choices=RELATIONSHIP_TYPES)
+    
+    class Meta:
+        unique_together = ['source_post', 'target_post']
