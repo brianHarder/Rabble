@@ -3,10 +3,23 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm
 from .models import Rabble, SubRabble, Post, Comment, User
 from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm, ForgotPasswordForm, ProfileEditForm
 from django.db import models
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .services import PostAnalysisService
+import asyncio
+from .models import PostRelationship
+from rest_framework import status, viewsets
+from django.db.models import Q
+from django.core.cache import cache
+import hashlib
+import json
+
+def get_posts_hash(posts):
+    post_data = sorted([(post.id, post.title, post.body) for post in posts], key=lambda x: x[0])
+    return hashlib.md5(json.dumps(post_data).encode()).hexdigest()
 
 @login_required
 def profile(request):
@@ -140,12 +153,67 @@ def subrabble_create(request, community_id):
 def subrabble_detail(request, community_id, subrabble_community_id):
     rabble = get_object_or_404(Rabble, community_id=community_id)
     subrabble = get_object_or_404(SubRabble, subrabble_community_id=subrabble_community_id, rabble_id=rabble)
-    posts = Post.objects.filter(subrabble_id=subrabble)
+   
+    posts = Post.objects.filter(subrabble_id=subrabble).order_by('-id')
+    posts_hash_key = f'subrabble_posts_hash_{subrabble.id}'
+    current_posts_hash = get_posts_hash(posts)
+    
+    # Check if posts/content has changed
+    cached_posts_hash = cache.get(posts_hash_key)
+    should_run_analysis = (cached_posts_hash is None or cached_posts_hash != current_posts_hash)
+    
+    if should_run_analysis and posts.exists():
+        # Create event loop for async processing
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        
+        try:
+            service = PostAnalysisService()
+            loop.run_until_complete(service.analyze_all_posts(subrabble.id))
+            
+            # Update the posts hash in cache after successful analysis
+            cache.set(posts_hash_key, current_posts_hash, timeout=3600)
+            
+        except Exception as e:
+            print(f"DEBUG: subrabble_detail - Error during analysis: {e}")
+            cache.delete(posts_hash_key)
+        finally:
+            loop.close()
 
+    # Always regenerate posts_with_relationships from fresh database data
+    posts_with_relationships = []
+    for post in posts:
+        relationships = PostRelationship.objects.filter(
+            Q(source_post=post) | Q(target_post=post)
+        ).select_related('source_post', 'target_post')
+        
+        outgoing = []
+        incoming = []
+        
+        for rel in relationships:
+            if rel.source_post == post:
+                outgoing.append({
+                    'relationship_type': rel.relationship_type,
+                    'target_post_id': rel.target_post.id,
+                    'target_post_title': rel.target_post.title
+                })
+            else:
+                incoming.append({
+                    'relationship_type': rel.relationship_type,
+                    'source_post_id': rel.source_post.id,
+                    'source_post_title': rel.source_post.title
+                })
+        
+        posts_with_relationships.append({
+            'post': post,
+            'outgoing': outgoing,
+            'incoming': incoming
+        })
+    
     context = {
         'rabble': rabble,
         'subrabble': subrabble,
-        'posts': posts
+        'posts_with_relationships': posts_with_relationships
     }
 
     return render(request, "rabble/subrabble_detail.html", context)
@@ -248,11 +316,20 @@ def post_edit(request, community_id, subrabble_community_id, pk):
     if request.user != post.user_id:
         return HttpResponseForbidden("You cannot edit other people's posts.")
 
-    form = PostForm(instance=post)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Post updated successfully!")
+            return redirect("subrabble-detail", community_id=rabble.community_id, subrabble_community_id=subrabble.subrabble_community_id)
+    else:
+        form = PostForm(instance=post)
+
     context = {
         'rabble': rabble,
         'subrabble': subrabble,
-        'form': form
+        'form': form,
+        'post': post
     }
     return render(request, "rabble/post_form.html", context)
 
@@ -394,3 +471,39 @@ def forgot_password(request):
         form = ForgotPasswordForm()
     
     return render(request, 'rabble/forgot_password.html', {'form': form})
+
+class PostViewSet(viewsets.ModelViewSet):
+    @action(detail=False, methods=['post'])
+    def analyze_relationships(self, request):
+        subrabble_id = request.data.get('subrabble_id')
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        
+        try:
+            service = PostAnalysisService()
+            loop.run_until_complete(service.analyze_all_posts(subrabble_id))
+            return Response({'status': 'analysis completed'})
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        finally:
+            loop.close()
+
+    @action(detail=True, methods=['get'])
+    def relationships(self, request, pk=None):
+        post = self.get_object()
+        
+        outgoing = PostRelationship.objects.filter(source_post=post)
+        incoming = PostRelationship.objects.filter(target_post=post)
+        
+        data = {
+            'outgoing': [{
+                'target_post_id': rel.target_post.id,
+                'relationship_type': rel.relationship_type
+            } for rel in outgoing],
+            'incoming': [{
+                'source_post_id': rel.source_post.id,
+                'relationship_type': rel.relationship_type
+            } for rel in incoming]
+        }
+        
+        return Response(data)

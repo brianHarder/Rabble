@@ -1,0 +1,24 @@
+{
+    "relationships": [
+        {
+            "post1_id": 1,
+            "post2_id": 2,
+            "relationship": "supports"
+        },
+        {
+            "post1_id": 1,
+            "post2_id": 3,
+            "relationship": "contradicts"
+        },
+        {
+            "post1_id": 2,
+            "post2_id": 3,
+            "relationship": "transtions"
+        },
+        {
+            "post1_id": 1,
+            "post2_id": 4,
+            "relationship": "elaborates"
+        }
+    ]
+} 

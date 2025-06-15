@@ -17,3 +17,4 @@ psycopg2-binary==2.9.10
 pytest==8.3.5
 pytest-django==4.10.0
 whitenoise==6.9.0
+openai==1.86.0

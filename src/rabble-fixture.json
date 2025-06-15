@@ -251,6 +251,16 @@
     }
   },
   {
+    "model": "rabble.post",
+    "pk": 4,
+    "fields": {
+      "title": "CS 141 honest opinion",
+      "body": "141 was my least favorite CS class, I thought it was useless",
+      "user_id": 4,
+      "subrabble_id": 1
+    }
+  },
+  {
     "model": "rabble.comment",
     "pk": 1,
     "fields": {

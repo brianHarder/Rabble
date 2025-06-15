@@ -23,34 +23,32 @@ def test_index_view(client):
 
 
 @pytest.mark.django_db
-def test_subrabble_detail_view(client):
-    community = CommunityFactory.create()
-    client.force_login(community.owner)
+def test_post_detail_view(client):
+    user = UserFactory.create()
+    community = CommunityFactory.create(owner=user)
+    subrabble = SubRabbleFactory.create(rabble_id=community, user_id=user)
+    post = PostFactory.create(subrabble_id=subrabble, user_id=user)
+    comment1 = CommentFactory.create(post_id=post, user_id=user, text="First comment")
+    comment2 = CommentFactory.create(post_id=post, user_id=user, text="Second comment")
 
-    subrabble = SubRabbleFactory.create(rabble_id=community)
+    client.force_login(user)
 
-    posts = []
-    for _ in range(5):
-        post = PostFactory.create(subrabble_id=subrabble, user_id=community.owner)
-        posts.append(post)
-        CommentFactory.create(post_id=post, user_id=community.owner)
-
-    url = reverse('subrabble-detail', kwargs={
+    url = reverse('post-detail', kwargs={
         'community_id': community.community_id,
-        'subrabble_community_id': subrabble.subrabble_community_id
+        'subrabble_community_id': subrabble.subrabble_community_id,
+        'pk': post.pk
     })
+
     response = client.get(url)
     assert response.status_code == 200
-
-    rendered_posts = list(response.context['posts'])
-    assert set(rendered_posts) == set(posts)
-
-    html = response.content.decode()
-    for post in posts:
-        assert post.title in html
-
-        count = Comment.objects.filter(post_id=post).count()
-        assert str(count) in html
+    assert 'post' in response.context
+    assert response.context['post'] == post
+    assert 'comments' in response.context
+    assert list(response.context['comments'].order_by('id')) == [comment1, comment2]
+    assert 'rabble' in response.context
+    assert response.context['rabble'] == community
+    assert 'subrabble' in response.context
+    assert response.context['subrabble'] == subrabble
 
 
 @pytest.mark.django_db
