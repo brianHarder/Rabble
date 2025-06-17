@@ -1,4 +1,3 @@
-# forms.py
 
 from django import forms
 from .models import Post, Comment, SubRabble, User, Rabble
@@ -78,8 +77,8 @@ class SubRabbleForm(forms.ModelForm):
                 'pattern': '[a-zA-Z0-9-]*',
                 'title': 'Community ID can only contain letters, numbers, and dashes'
             }),
-            'subrabble_name':      forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter sub-Rabble name…'}),
-            'description':         forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is this sub-Rabble about?'}),
+            'subrabble_name':      forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Rabble name…'}),
+            'description':         forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is this Rabble about?'}),
             'allow_anonymous':     forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'private':             forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
@@ -88,7 +87,7 @@ class SubRabbleForm(forms.ModelForm):
             'subrabble_name':         'Name',
             'description':            'Description',
             'allow_anonymous':        'Allow anonymous posts?',
-            'private':                'Private sub-Rabble?',
+            'private':                'Private Rabble?',
             'members':                'Members',
         }
 
@@ -137,7 +136,7 @@ class UserRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Remove Django’s default “autofocus” on username, if present
+        # Remove Django's default "autofocus" on username, if present
         if 'autofocus' in self.fields['username'].widget.attrs:
             del self.fields['username'].widget.attrs['autofocus']
 
@@ -227,13 +226,13 @@ class RabbleForm(forms.ModelForm):
                 'pattern': '[a-zA-Z0-9-]*',
                 'title': 'Community ID can only contain letters, numbers, and dashes'
             }),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is this Rabble about?'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'What is the theme of this community?'}),
             'private': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
         labels = {
             'community_id': 'Community ID',
             'description': 'Description',
-            'private': 'Private Rabble?',
+            'private': 'Private Community?',
             'members': 'Members',
         }
 

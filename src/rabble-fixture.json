@@ -31,7 +31,7 @@
     "pk": 4,
     "fields": {
       "community_id": "third",
-      "owner": 4,
+      "owner": 3,
       "description": "third rabble"
     }
   },

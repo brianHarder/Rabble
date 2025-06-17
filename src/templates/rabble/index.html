@@ -17,7 +17,7 @@
     {% endfor %}
   {% else %}
     <div class="no-rabbles">
-      <h2>No rabbles yet</h2>
+      <h2>No communities yet</h2>
       <p>Create one to get started!</p>
     </div>
   {% endif %}
@@ -25,7 +25,7 @@
 
 {% if user.is_authenticated %}
   <a href="{% url 'rabble-create' %}" class="btn btn-primary new-rabble-btn">
-    <i class="bi bi-plus-lg me-2"></i>New Rabble
+    <i class="bi bi-plus-lg me-2"></i>New Community
   </a>
 {% endif %}
 {% endblock content %}

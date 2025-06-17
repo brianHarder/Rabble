@@ -15,8 +15,8 @@
     <h1>!{{ subrabble.subrabble_community_id }} — {{ subrabble.subrabble_name }}</h1>
     {% if user.is_authenticated and user == subrabble.user_id %}
     <div class="d-flex gap-2">
-      <a href="{% url 'subrabble-edit' rabble.community_id subrabble.subrabble_community_id %}" class="btn btn-outline-secondary btn-sm">Edit SubRabble</a>
-      <a href="{% url 'subrabble-delete' rabble.community_id subrabble.subrabble_community_id %}" class="btn btn-outline-danger btn-sm">Delete SubRabble</a>
+      <a href="{% url 'subrabble-edit' rabble.community_id subrabble.subrabble_community_id %}" class="btn btn-outline-secondary btn-sm">Edit Rabble</a>
+      <a href="{% url 'subrabble-delete' rabble.community_id subrabble.subrabble_community_id %}" class="btn btn-outline-danger btn-sm">Delete Rabble</a>
     </div>
     {% endif %}
   </div>

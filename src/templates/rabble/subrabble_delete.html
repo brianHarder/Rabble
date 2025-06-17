@@ -10,7 +10,7 @@
     <form method="post" class="mt-4">
       {% csrf_token %}
       <div class="d-flex justify-content-center gap-3">
-        <button type="submit" class="btn btn-danger">Delete</button>
+        <button type="submit" class="btn btn-danger">Delete Rabble</button>
         <a href="{% url 'subrabble-detail' rabble.community_id subrabble.subrabble_community_id %}" class="btn btn-secondary">Cancel</a>
       </div>
     </form>

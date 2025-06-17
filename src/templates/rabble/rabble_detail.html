@@ -15,12 +15,12 @@
     <div class="d-flex flex-column gap-2">
       {% if user.is_authenticated and user == rabble.owner %}
         <div class="d-flex gap-2">
-          <a href="{% url 'rabble-edit' rabble.community_id %}" class="btn btn-outline-secondary">Edit Rabble</a>
-          <a href="{% url 'rabble-delete' rabble.community_id %}" class="btn btn-outline-danger">Delete Rabble</a>
+          <a href="{% url 'rabble-edit' rabble.community_id %}" class="btn btn-outline-secondary">Edit Community</a>
+          <a href="{% url 'rabble-delete' rabble.community_id %}" class="btn btn-outline-danger">Delete Community</a>
         </div>
       {% endif %}
       <a href="{% url 'subrabble-create' rabble.community_id %}" class="btn btn-primary">
-        New SubRabble
+        New Rabble
       </a>
     </div>
   </div>
@@ -84,7 +84,7 @@
     <div class="no-subrabbles">
       <div class="empty-state">
         <i class="bi bi-collection"></i>
-        <h3>No SubRabbles Yet</h3>
+        <h3>No Rabbles Yet</h3>
         <p>Create one to get started!</p>
       </div>
     </div>
