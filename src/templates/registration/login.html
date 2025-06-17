@@ -120,12 +120,32 @@
     opacity: 0.9;
     font-size: 0.9rem;
   }
+
+  .guest-login-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(45deg, var(--rabble-primary), var(--rabble-accent));
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+
+  .guest-login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    color: white;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
-  <!-- Decorative circles -->
   <div class="decoration-circle circle-1"></div>
   <div class="decoration-circle circle-2"></div>
   <div class="decoration-circle circle-3"></div>
@@ -136,7 +156,7 @@
         <h2 class="login-title text-center">Welcome Back</h2>
         <p class="login-subtitle text-center">Sign in to continue to Rabble</p>
 
-        <form method="post" class="needs-validation">
+        <form method="post" class="needs-validation" id="login-form">
           {% csrf_token %}
 
           {% if form.non_field_errors %}
@@ -204,6 +224,10 @@
   </div>
 </div>
 
+<button class="guest-login-btn" onclick="handleGuestLogin()">
+  <i class="bi bi-person-fill me-1"></i> Continue as Guest
+</button>
+
 {% block javascript %}
 <script>
 function togglePassword() {
@@ -219,6 +243,16 @@ function togglePassword() {
     toggleButton.classList.remove('bi-eye-slash');
     toggleButton.classList.add('bi-eye');
   }
+}
+
+function handleGuestLogin() {
+  const usernameInput = document.getElementById('{{ form.username.id_for_label }}');
+  const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
+  const loginForm = document.getElementById('login-form');
+
+  usernameInput.value = 'guest';
+  passwordInput.value = 'xgU23*lY';
+  loginForm.submit();
 }
 </script>
 {% endblock %}

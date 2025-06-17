@@ -221,6 +221,27 @@
     }
   },
   {
+    "model": "rabble.user",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$JzUw3pHMb5gCkf15SiaVJj$PxbRgXGYOyrbZB5SfQ+kHXoWSI5yq++TJ426bvldXu4=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "guest",
+      "first_name": "Guest",
+      "last_name": "User",
+      "email": "guest@email.com",
+      "is_staff": false,
+      "is_active": true,
+      "bio": "",
+      "profile_picture": "images/default.png",
+      "groups": [],
+      "user_permissions": [],
+      "follows": [],
+      "invites": []
+    }
+  },
+  {
     "model": "rabble.post",
     "pk": 1,
     "fields": {
