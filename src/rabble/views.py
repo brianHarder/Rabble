@@ -204,8 +204,23 @@ def subrabble_detail(request, community_id, subrabble_community_id):
                     'source_post_title': rel.source_post.title
                 })
         
+        # Serialize the post object to a dict
+        post_dict = {
+            'pk': post.pk,
+            'title': post.title,
+            'body': post.body,
+            'anonymous': post.anonymous,
+            'rabble_id': post.subrabble_id.rabble_id.community_id if hasattr(post.subrabble_id, 'rabble_id') and hasattr(post.subrabble_id.rabble_id, 'community_id') else None,
+            'subrabble_id': post.subrabble_id.subrabble_community_id if hasattr(post.subrabble_id, 'subrabble_community_id') else None,
+            'user_id': {
+                'username': post.user_id.username if post.user_id else None
+            },
+            'post_likes': list(post.post_likes.values_list('pk', flat=True)) if hasattr(post, 'post_likes') else [],
+            'comment_set': list(post.comment_set.values_list('pk', flat=True)) if hasattr(post, 'comment_set') else [],
+        }
+
         posts_with_relationships.append({
-            'post': post,
+            'post': post_dict,
             'outgoing': outgoing,
             'incoming': incoming
         })
@@ -213,7 +228,8 @@ def subrabble_detail(request, community_id, subrabble_community_id):
     context = {
         'rabble': rabble,
         'subrabble': subrabble,
-        'posts_with_relationships': posts_with_relationships
+        'posts_with_relationships': posts_with_relationships,
+        'posts_with_relationships_json': json.dumps(posts_with_relationships),
     }
 
     return render(request, "rabble/subrabble_detail.html", context)

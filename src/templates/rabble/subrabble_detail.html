@@ -1,6 +1,7 @@
 {% extends "rabble/base.html" %}
 {% load static %}
 
+
 {% block title %}!{{ subrabble.subrabble_community_id }}{% endblock %}
 
 {% block content %}
@@ -29,80 +30,8 @@
     </a>
   </div>
 
-  {% if posts_with_relationships %}
-    <div class="list-group">
-      {% for post_data in posts_with_relationships %}
-        {% with post=post_data.post %}
-        <div class="list-group-item mb-4 shadow-sm rounded p-3" 
-             data-post-id="{{ post.pk }}"
-             data-community-id="{{ rabble.community_id }}"
-             data-subrabble-id="{{ subrabble.subrabble_community_id }}">
-          <h5>
-            <a href="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id post.pk %}" class="text-decoration-none">
-              {{ post.title }}
-            </a>
-          </h5>
-          <p>{{ post.body }}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            {% if post.anonymous %}
-              <small class="text-muted">By anonymous</small>
-            {% else %}
-              <small class="text-muted">By {{ post.user_id.username }}</small>
-            {% endif %}
-            <div class="d-flex gap-3">
-              <span>
-                👍 <span class="badge bg-secondary">{{ post.post_likes.count }}</span>
-              </span>
-              <a href="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id post.pk %}" class="text-decoration-none">
-                💬 <span class="badge bg-secondary">{{ post.comment_set.count }}</span>
-              </a>
-            </div>
-          </div>
-          <div class="relationships mt-3">
-            <div class="outgoing-relationships">
-              <h6 class="text-muted">Related Posts:</h6>
-              <ul class="list-unstyled">
-                {% if post_data.outgoing %}
-                  {% for rel in post_data.outgoing %}
-                    <li class="mb-2">
-                      <span class="badge bg-{% if rel.relationship_type == 'contradicts' %}danger{% elif rel.relationship_type == 'supports' %}success{% elif rel.relationship_type == 'elaborates' %}info{% elif rel.relationship_type == 'questions' %}warning{% elif rel.relationship_type == 'shifts_focus' %}secondary{% else %}light{% endif %} me-2">
-                        {{ rel.relationship_type }}
-                      </span>
-                      <a href="/{{ rabble.community_id }}/!{{ subrabble.subrabble_community_id }}/{{ rel.target_post_id }}/" class="text-decoration-none">
-                        {{ rel.target_post_title }}
-                      </a>
-                    </li>
-                  {% endfor %}
-                {% else %}
-                  <li class="text-muted">No outgoing relationships</li>
-                {% endif %}
-              </ul>
-            </div>
-            <div class="incoming-relationships mt-2">
-              <h6 class="text-muted">Referenced By:</h6>
-              <ul class="list-unstyled">
-                {% if post_data.incoming %}
-                  {% for rel in post_data.incoming %}
-                    <li class="mb-2">
-                      <span class="badge bg-{% if rel.relationship_type == 'contradicts' %}danger{% elif rel.relationship_type == 'supports' %}success{% elif rel.relationship_type == 'elaborates' %}info{% elif rel.relationship_type == 'questions' %}warning{% elif rel.relationship_type == 'shifts_focus' %}secondary{% else %}light{% endif %} me-2">
-                        {{ rel.relationship_type }}
-                      </span>
-                      <a href="/{{ rabble.community_id }}/!{{ subrabble.subrabble_community_id }}/{{ rel.source_post_id }}/" class="text-decoration-none">
-                        {{ rel.source_post_title }}
-                      </a>
-                    </li>
-                  {% endfor %}
-                {% else %}
-                  <li class="text-muted">No incoming relationships</li>
-                {% endif %}
-              </ul>
-            </div>
-          </div>
-        </div>
-        {% endwith %}
-      {% endfor %}
-    </div>
-  {% else %}
-    <p>No posts yet. Be the first to start the discussion!</p>
-  {% endif %}
+  <div id="knowledge-graph-container" style="width: 100%; min-height: 500px;"></div>
+  <script src="{% static 'js/knowledge-graph.js' %}"></script>
+  <script id="posts-graph-data" type="application/json">{{ posts_with_relationships_json|safe }}</script>
+
 {% endblock %}

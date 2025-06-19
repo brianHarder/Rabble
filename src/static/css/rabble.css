@@ -536,3 +536,18 @@ color: blue;
 .comment-like-btn.liked i {
     color: blue;
 }
+
+.graph-tooltip {
+  position: absolute;
+  z-index: 1000;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-size: 0.95rem;
+  color: #212529;
+  pointer-events: none;
+  max-width: 320px;
+  min-width: 120px;
+}
