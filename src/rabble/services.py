@@ -6,6 +6,7 @@ from typing import Optional, Tuple
 import asyncio
 from django.core.exceptions import ImproperlyConfigured
 from asgiref.sync import sync_to_async
+from django.db import models
 
 env = environ.Env()
 
@@ -96,10 +97,10 @@ If there is no relationship, respond with "none,forward"."""
 
     @sync_to_async
     def relationship_exists(self, post1: Post, post2: Post) -> bool:
-        """Check if a relationship already exists between two posts"""
+        """Check if a relationship already exists between two posts in either direction"""
         return PostRelationship.objects.filter(
-            source_post=post1,
-            target_post=post2
+            (models.Q(source_post=post1, target_post=post2) |
+             models.Q(source_post=post2, target_post=post1))
         ).exists()
 
     @sync_to_async

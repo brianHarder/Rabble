@@ -282,6 +282,46 @@
     }
   },
   {
+    "model": "rabble.post",
+    "pk": 5,
+    "fields": {
+      "title": "Agreed on CS 141",
+      "body": "CS 141 was a fantastic way to get into programming. The final project was especially fun.",
+      "user_id": 2,
+      "subrabble_id": 1
+    }
+  },
+  {
+    "model": "rabble.post",
+    "pk": 6,
+    "fields": {
+      "title": "CS 141 was too basic",
+      "body": "I agree with Chris. For those with prior experience, CS 141 felt very slow and didn't cover enough ground.",
+      "user_id": 5,
+      "subrabble_id": 1
+    }
+  },
+  {
+    "model": "rabble.post",
+    "pk": 7,
+    "fields": {
+      "title": "CS 142 Project",
+      "body": "I agree about the project in CS 142. It was the best part of the course. I wish we had more time to add features.",
+      "user_id": 6,
+      "subrabble_id": 1
+    }
+  },
+  {
+    "model": "rabble.post",
+    "pk": 8,
+    "fields": {
+      "title": "Flipped classroom in CS 144",
+      "body": "Did anyone else actually like the flipped classroom for CS 144? I thought it was a nice change of pace and helped me learn at my own speed.",
+      "user_id": 2,
+      "subrabble_id": 1
+    }
+  },
+  {
     "model": "rabble.comment",
     "pk": 1,
     "fields": {

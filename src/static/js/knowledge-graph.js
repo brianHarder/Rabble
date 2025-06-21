@@ -79,10 +79,10 @@
       .style('font-size', '0.95rem');
 
     const simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(200))
-      .force('charge', d3.forceManyBody().strength(-400))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(250))
+      .force('charge', d3.forceManyBody().strength(-800))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collide', d3.forceCollide(60));
+      .force('collide', d3.forceCollide(80));
 
     // Draw links
     const link = svg.append('g')
@@ -161,34 +161,8 @@
 
       // Relationship labels: parallel to the link, always upright
       linkLabel
-        .attr('x', d => {
-          const x1 = clamp(d.source.x, padding, width - padding);
-          const x2 = clamp(d.target.x, padding, width - padding);
-          const y1 = clamp(d.source.y, padding, height - padding);
-          const y2 = clamp(d.target.y, padding, height - padding);
-          const mx = (x1 + x2) / 2;
-          const my = (y1 + y2) / 2;
-          const dx = x2 - x1;
-          const dy = y2 - y1;
-          const len = Math.sqrt(dx*dx + dy*dy) || 1;
-          const offset = 12; // px
-          // Perpendicular offset
-          return clamp(mx - offset * (dy / len), padding, width - padding);
-        })
-        .attr('y', d => {
-          const x1 = clamp(d.source.x, padding, width - padding);
-          const x2 = clamp(d.target.x, padding, width - padding);
-          const y1 = clamp(d.source.y, padding, height - padding);
-          const y2 = clamp(d.target.y, padding, height - padding);
-          const mx = (x1 + x2) / 2;
-          const my = (y1 + y2) / 2;
-          const dx = x2 - x1;
-          const dy = y2 - y1;
-          const len = Math.sqrt(dx*dx + dy*dy) || 1;
-          const offset = 12; // px
-          // Perpendicular offset
-          return clamp(my + offset * (dx / len), padding, height - padding);
-        })
+        .attr('x', d => (clamp(d.source.x, padding, width - padding) + clamp(d.target.x, padding, width - padding)) / 2)
+        .attr('y', d => (clamp(d.source.y, padding, height - padding) + clamp(d.target.y, padding, height - padding)) / 2)
         .attr('transform', d => {
           const x1 = clamp(d.source.x, padding, width - padding);
           const x2 = clamp(d.target.x, padding, width - padding);
@@ -197,71 +171,63 @@
           const mx = (x1 + x2) / 2;
           const my = (y1 + y2) / 2;
           let angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-          if (angle > 90 || angle < -90) angle += 180;
-          return `rotate(${angle},${mx},${my})`;
-        });
+          if (angle > 90 || angle < -90) {
+            angle += 180;
+          }
+          return `rotate(${angle}, ${mx}, ${my})`;
+        })
+        .attr('dy', '-0.4em');
 
       node
         .attr('cx', d => d.x = clamp(d.x, padding, width - padding))
         .attr('cy', d => d.y = clamp(d.y, padding, height - padding));
 
-      // Improved node label clamping for visibility
-      label
-        .attr('x', d => {
-          // Find the closest edge
-          const margin = 40;
-          const distTop = d.y - padding;
-          const distBottom = height - padding - d.y;
-          const distLeft = d.x - padding;
-          const distRight = width - padding - d.x;
-          const minDist = Math.min(distTop, distBottom, distLeft, distRight);
-          let x;
-          if (minDist === distTop) x = d.x; // Top: center above
-          else if (minDist === distBottom) x = d.x; // Bottom: center below
-          else if (minDist === distLeft) x = d.x - margin; // Left: to the left
-          else if (minDist === distRight) x = d.x + margin; // Right: to the right
-          else x = d.x;
-          return clamp(x, padding, width - padding);
-        })
-        .attr('y', d => {
-          // Find the closest edge
-          const margin = 36;
-          const distTop = d.y - padding;
-          const distBottom = height - padding - d.y;
-          const distLeft = d.x - padding;
-          const distRight = width - padding - d.x;
-          const minDist = Math.min(distTop, distBottom, distLeft, distRight);
-          let y;
-          if (minDist === distTop) y = d.y - margin; // Top: above
-          else if (minDist === distBottom) y = d.y + margin; // Bottom: below
-          else if (minDist === distLeft || minDist === distRight) y = d.y + 4; // Side: vertically centered
-          else y = d.y + 40;
-          return clamp(y, padding, height - padding);
-        })
-        .attr('text-anchor', d => {
-          const distTop = d.y - padding;
-          const distBottom = height - padding - d.y;
-          const distLeft = d.x - padding;
-          const distRight = width - padding - d.x;
-          const minDist = Math.min(distTop, distBottom, distLeft, distRight);
-          if (minDist === distLeft) return 'end';      // Left
-          if (minDist === distRight) return 'start';   // Right
-          return 'middle'; // Centered above/below
-        })
-        .attr('dominant-baseline', d => {
-          const distTop = d.y - padding;
-          const distBottom = height - padding - d.y;
-          const distLeft = d.x - padding;
-          const distRight = width - padding - d.x;
-          const minDist = Math.min(distTop, distBottom, distLeft, distRight);
-          if (minDist === distTop) return 'auto';     // Above
-          if (minDist === distBottom) return 'hanging'; // Below
-          return 'middle'; // Side
-        });
+      // Standardize node label positioning
+      const nodeRadius = 28;
+      const labelOffset = 8; // Distance from node circle edge
+      const totalOffset = nodeRadius + labelOffset;
 
-      svg.selectAll('g > text')
-        .attr('x', d => clamp((d.source.x + d.target.x) / 2, padding, width - padding))
-        .attr('y', d => clamp((d.source.y + d.target.y) / 2, padding, height - padding));
+      label.each(function(d) {
+        const connectedLinks = links.filter(l => l.source === d || l.target === d);
+        let vector = { x: 0, y: 0 };
+        
+        if (connectedLinks.length > 0) {
+            connectedLinks.forEach(l => {
+                const otherNode = l.source === d ? l.target : l.source;
+                vector.x += otherNode.x - d.x;
+                vector.y += otherNode.y - d.y;
+            });
+
+            const len = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+            if (len > 0) {
+                vector.x /= len;
+                vector.y /= len;
+            } else {
+                vector.x = 0;
+                vector.y = -1; // Default to above if vectors cancel out
+            }
+        } else {
+            vector.x = 0;
+            vector.y = -1; // Default to above for isolated nodes
+        }
+
+        const labelX = d.x - vector.x * totalOffset;
+        const labelY = d.y - vector.y * totalOffset;
+        
+        let textAnchor = "middle";
+        if (vector.x > 0.5) textAnchor = "end";
+        else if (vector.x < -0.5) textAnchor = "start";
+
+        let dominantBaseline = "middle";
+        if (vector.y > 0.5) dominantBaseline = "auto";
+        else if (vector.y < -0.5) dominantBaseline = "hanging";
+        
+        d3.select(this)
+          .attr('x', clamp(labelX, padding, width - padding))
+          .attr('y', clamp(labelY, padding, height-padding))
+          .attr('text-anchor', textAnchor)
+          .attr('dominant-baseline', dominantBaseline);
+      });
     });
   }
 })(); 
