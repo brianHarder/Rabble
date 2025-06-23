@@ -81,6 +81,7 @@ class RelationshipAnalysisTest(TestCase):
         self.assertEqual(target_relationships.count(), 0)
 
     @patch('openai.AsyncOpenAI')
+    @patch.dict('os.environ', {'OPENAI_API_KEY': 'test-key'})
     async def test_analyze_post_pair(self, mock_openai):
         """Test the analyze_post_pair method with mocked API response"""
         # Mock the API response
