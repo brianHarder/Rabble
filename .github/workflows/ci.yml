@@ -25,6 +25,7 @@ jobs:
           echo "SECRET_KEY=dummy-key-for-ci" > .env
           echo "DEBUG=True" >> .env
           echo "DATABASE_URL=sqlite:///db.sqlite3" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
       - name: Check Django setup
         working-directory: src/
