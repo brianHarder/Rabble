@@ -287,9 +287,11 @@ def post_detail(request, community_id, subrabble_community_id, pk):
     comments = post.comment_set.all()
     if request.user.is_authenticated:
         for comment in comments:
-            comment.user_has_liked = request.user in comment.comment_likes.all()
+            comment.user_has_liked = CommentLike.objects.filter(user=request.user, comment=comment, is_dislike=False).exists()
             comment.user_has_disliked = CommentLike.objects.filter(user=request.user, comment=comment, is_dislike=True).exists()
             comment.comment_dislikes = CommentLike.objects.filter(comment=comment, is_dislike=True)
+            comment.like_count = CommentLike.objects.filter(comment=comment, is_dislike=False).count()
+            comment.dislike_count = CommentLike.objects.filter(comment=comment, is_dislike=True).count()
 
     context = {
         'rabble': rabble,

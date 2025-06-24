@@ -79,7 +79,7 @@
                                 data-liked="{{ comment.user_has_liked|yesno:'True,False' }}"
                             >
                                 <i class="bi bi-hand-thumbs-up-fill"></i>
-                                <span class="comment-like-count">{{ comment.comment_likes.count }}</span>
+                                <span class="comment-like-count">{{ comment.like_count }}</span>
                             </button>
                             <button
                                 class="btn btn-light p-0 border-0 comment-dislike-btn"
@@ -90,7 +90,7 @@
                                 data-disliked="{{ comment.user_has_disliked|yesno:'True,False' }}"
                             >
                                 <i class="bi bi-hand-thumbs-down-fill"></i>
-                                <span class="comment-dislike-count">{{ comment.comment_dislikes.count }}</span>
+                                <span class="comment-dislike-count">{{ comment.dislike_count }}</span>
                             </button>
                         </div>
                     </div>
