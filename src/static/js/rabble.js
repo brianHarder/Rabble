@@ -104,6 +104,46 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const commentDislikeBtns = document.querySelectorAll('.comment-dislike-btn');
+  const csrftoken = getCookie('csrftoken');
+
+  commentDislikeBtns.forEach(btn => {
+      if (btn.dataset.disliked === 'True') {
+          btn.classList.add('disliked');
+      }
+
+      btn.addEventListener('click', async () => {
+          const username = btn.dataset.username;
+          if (!username) return alert('Log in to dislike comments');
+
+          try {
+              const res = await fetch(btn.dataset.dislikeUrl, {
+                  method: 'POST',
+                  credentials: 'same-origin',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': csrftoken,
+                  },
+                  body: JSON.stringify({ user: username }),
+              });
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+              const data = await res.json();
+
+              const countSpan = btn.querySelector('.comment-dislike-count');
+              countSpan.textContent = data.dislike_count;
+
+              btn.classList.toggle('disliked', data.disliked);
+              btn.dataset.disliked = data.disliked ? 'True' : 'False';
+
+          } catch (err) {
+              console.error('Error toggling dislike:', err);
+              alert('Sorry, could not toggle dislike.');
+          }
+      });
+  });
+});
+
 document.addEventListener("DOMContentLoaded", function() {
   // Handle private checkbox and members list for both rabble and subrabble forms
   var priv = document.getElementById("id_private");

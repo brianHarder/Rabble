@@ -81,6 +81,17 @@
                                 <i class="bi bi-hand-thumbs-up-fill"></i>
                                 <span class="comment-like-count">{{ comment.comment_likes.count }}</span>
                             </button>
+                            <button
+                                class="btn btn-light p-0 border-0 comment-dislike-btn"
+                                data-dislike-url="{% url 'comment-dislikes' rabble.community_id subrabble.subrabble_community_id post.pk comment.pk %}"
+                                data-username="{{ user.username }}"
+                                data-comment-id="{{ comment.pk }}"
+                                {% if not user.is_authenticated %}disabled title="Log in to dislike"{% endif %}
+                                data-disliked="{{ comment.user_has_disliked|yesno:'True,False' }}"
+                            >
+                                <i class="bi bi-hand-thumbs-down-fill"></i>
+                                <span class="comment-dislike-count">{{ comment.comment_dislikes.count }}</span>
+                            </button>
                         </div>
                     </div>
                     {% if user.is_authenticated and user == comment.user_id %}

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
-from .models import Rabble, SubRabble, Post, Comment, User
+from .models import Rabble, SubRabble, Post, Comment, User, CommentLike
 from .forms import PostForm, CommentForm, SubRabbleForm, UserRegistrationForm, CustomLoginForm, RabbleForm, ForgotPasswordForm, ProfileEditForm
 from django.db import models
 from rest_framework.decorators import action
@@ -283,11 +283,13 @@ def post_detail(request, community_id, subrabble_community_id, pk):
     if request.user.is_authenticated:
         liked = request.user in post.post_likes.all()
 
-    # Get comments with like information
+    # Get comments with like and dislike information
     comments = post.comment_set.all()
     if request.user.is_authenticated:
         for comment in comments:
             comment.user_has_liked = request.user in comment.comment_likes.all()
+            comment.user_has_disliked = CommentLike.objects.filter(user=request.user, comment=comment, is_dislike=True).exists()
+            comment.comment_dislikes = CommentLike.objects.filter(comment=comment, is_dislike=True)
 
     context = {
         'rabble': rabble,

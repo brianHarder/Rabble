@@ -537,6 +537,14 @@ color: blue;
     color: blue;
 }
 
+.comment-dislike-btn i {
+    color: #ccc;
+}
+
+.comment-dislike-btn.disliked i {
+    color: red;
+}
+
 .graph-tooltip {
   position: absolute;
   z-index: 1000;
