@@ -57,7 +57,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "rabble-project.urls"
+ROOT_URLCONF = "rabble_project.urls"
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "rabble-project.wsgi.application"
+WSGI_APPLICATION = "rabble_project.wsgi.application"
 
 
 # Database
