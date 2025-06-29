@@ -5,11 +5,12 @@ import os
 
 DATABASES = {'default': env.db()}
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["your-domain.com"])
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["https://your-domain.com"])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["rabbleapp.me"])
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["https://rabbleapp.me"])
 SECURE_SSL_REDIRECT = False
 
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 LOGGING = {
     'version': 1,

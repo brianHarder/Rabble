@@ -105,8 +105,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+
+
 STATIC_URL = env('STATIC_URL', default='https://rabble-bucket.s3.amazonaws.com/static/')
+STATICFILES_LOCATION = 'static/'
 MEDIA_URL = env('MEDIA_URL', default='https://rabble-bucket.s3.amazonaws.com/media/')
+MEDIAFILES_LOCATION = "media"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Required by Django, ignored by S3 storage
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
@@ -130,4 +135,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ]
+}
+
+
+
+STORAGES = {
+    "default": {"BACKEND": "rabble.custom_storage.MediaStorage"},
+    "staticfiles": {"BACKEND": "rabble.custom_storage.StaticStorage"},
 }
