@@ -8,11 +8,13 @@
 
  ## Built With
  - Django
- - PostgreSQL
  - JavaScript
  - HTML
  - Bootstrap
- - Google Cloud Platform
+   
+ - AWS: EC2, RDS, S3
+ - Docker
+ - PostgreSQL
 
 ## Getting Started
-Rabble is live at this link: https://rabble-briankharder.uc.r.appspot.com/
+Rabble is live at this link: https://rabbleapp.me
