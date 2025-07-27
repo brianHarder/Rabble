@@ -1,6 +1,6 @@
 # Rabble
 
- ## Description
+ ## Project Overview
 
 Rabble is a web application where people organize themselves into communities based on particular areas of interest. From here, users can create discussion boards ("rabbles") to spark conversations and share ideas through posts and comments. Posts are organized into knowledge graphs, providing an engaging representation of everyone's ideas and how they relate to each other.
 
