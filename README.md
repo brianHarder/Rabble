@@ -2,7 +2,7 @@
 
  ## Description
 
-Rabble is a web application where users organize themselves into communities based on particular areas of interest. From here, users can create discussion boards ("rabbles") that fall under the topic of that community. Rabbles consist of posts and comments allowing users to share ideas and express support for what others have to say. This project started with a series of homework assignments in UChicago's software development course that I then developed into my own application.
+Rabble is a web application where people organize themselves into communities based on particular areas of interest. From here, users can create discussion boards ("rabbles") to spark conversations and share ideas through posts and comments. Posts are organized into knowledge graphs, providing an engaging representation of everyone's ideas and how they relate to each other.
 
 ## Features
 
