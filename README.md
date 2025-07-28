@@ -6,10 +6,10 @@ Rabble is a web application where people organize themselves into communities ba
 
 ## Features
 
-1. Community management including private community support
-2. Support for posts and comments with likes/dislikes and anonymous option
-3. Account creation and management plus password reset
-4. Knowledge graphs of posts auto-generated using the OpenAI API
+- Community management including private community support
+- Support for posts and comments with likes/dislikes and anonymous option
+- Account creation and management plus password reset
+- Knowledge graphs of posts auto-generated using the OpenAI API
 
  ## Built With
 
