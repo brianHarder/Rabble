@@ -6,13 +6,17 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /src
 
 RUN apt-get update && \
-    apt-get install -y build-essential libpq-dev gcc && \
+    apt-get install -y build-essential libpq-dev gcc curl && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
     apt-get clean
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
+
+RUN cd src/frontend && npm ci && npm run build
 
 EXPOSE 8000
 

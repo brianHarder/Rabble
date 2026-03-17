@@ -175,3 +175,9 @@ cython_debug/
 
 # Ignore Django collected static files
 src/staticfiles/
+
+# Vite build output
+src/static/dist/
+
+# Node modules
+node_modules/
