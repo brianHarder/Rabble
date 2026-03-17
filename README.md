@@ -23,6 +23,3 @@ Rabble is a web application where people organize themselves into communities ba
 - AWS: EC2, RDS, S3  
 - Docker  
 - PostgreSQL
-
-## Getting Started
-Rabble is live! Visit: https://rabbleapp.me
