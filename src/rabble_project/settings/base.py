@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "api",
     "django_select2",
     "storages",
+    "django_vite",
 ]
 
 MIDDLEWARE = [
@@ -127,6 +128,7 @@ AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="us-west-1")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "rabble.User"
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -142,4 +144,13 @@ REST_FRAMEWORK = {
 STORAGES = {
     "default": {"BACKEND": "rabble.custom_storage.MediaStorage"},
     "staticfiles": {"BACKEND": "rabble.custom_storage.StaticStorage"},
+}
+
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+        "dev_server_host": "localhost",
+        "dev_server_port": 5173,
+        "manifest_path": str(BASE_DIR / "static" / "dist" / ".vite" / "manifest.json"),
+    }
 }

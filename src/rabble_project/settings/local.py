@@ -20,3 +20,16 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": False,
+        "manifest_path": str(BASE_DIR / "static" / "dist" / ".vite" / "manifest.json"),
+        "static_url_prefix": "dist",
+    }
+}
