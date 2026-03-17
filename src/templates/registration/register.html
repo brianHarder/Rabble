@@ -1,107 +1,11 @@
 {% extends "rabble/base.html" %}
-{% load static %}
+{% load django_vite %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
-  <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
-    <div class="card-body">
-      <h2 class="card-title text-center mb-4 text-rabble">Create an Account</h2>
-      <form method="post" novalidate class="needs-validation" enctype="multipart/form-data">
-        {% csrf_token %}
+<div id="app"></div>
+{{ page_data|json_script:"page-data" }}
+{% endblock %}
 
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger mb-4">
-            {{ form.non_field_errors }}
-          </div>
-        {% endif %}
-
-        <div class="mb-4 text-center">
-          <div class="profile-pic-container mb-3 mx-auto">
-            <img src="{% static 'images/default.png' %}" alt="Default profile picture" class="profile-pic-large">
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Profile Picture (Optional)</label>
-            {{ form.profile_picture }}
-            {% if form.profile_picture.errors %}
-              <div class="text-danger small mt-1">
-                {{ form.profile_picture.errors|striptags }}
-              </div>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
-          {{ form.username }}
-          {% if form.username.errors %}
-            <div class="text-danger small mt-1">
-              {{ form.username.errors|striptags }}
-            </div>
-          {% endif %}
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
-          {{ form.email }}
-          {% if form.email.errors %}
-            <div class="text-danger small mt-1">
-              {{ form.email.errors|striptags }}
-            </div>
-          {% endif %}
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
-          {{ form.first_name }}
-          {% if form.first_name.errors %}
-            <div class="text-danger small mt-1">
-              {{ form.first_name.errors|striptags }}
-            </div>
-          {% endif %}
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
-          {{ form.last_name }}
-          {% if form.last_name.errors %}
-            <div class="text-danger small mt-1">
-              {{ form.last_name.errors|striptags }}
-            </div>
-          {% endif %}
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label }}</label>
-          {{ form.password1 }}
-          {% if form.password1.errors %}
-            <div class="text-danger small mt-1">
-              {{ form.password1.errors|striptags }}
-            </div>
-          {% endif %}
-          {% if form.password1.help_text %}
-            <small class="form-text text-muted">{{ form.password1.help_text|safe }}</small>
-          {% endif %}
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label }}</label>
-          {{ form.password2 }}
-          {% if form.password2.errors %}
-            <div class="text-danger small mt-1">
-              {{ form.password2.errors|striptags }}
-            </div>
-          {% endif %}
-          {% if form.password2.help_text %}
-            <small class="form-text text-muted">{{ form.password2.help_text|safe }}</small>
-          {% endif %}
-        </div>
-
-        <button type="submit" class="btn btn-login w-100">Create Account</button>
-      </form>
-      <div class="text-center mt-3">
-        <p class="mb-0">Already have an account? <a href="{% url 'login' %}" class="text-rabble">Log in</a></p>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %} 
+{% block javascript %}
+{% vite_asset 'src/entries/register.js' %}
+{% endblock %}
