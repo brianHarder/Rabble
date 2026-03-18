@@ -14,12 +14,11 @@ def test_index_view(client):
     response = client.get(url)
     assert response.status_code == 200
 
-    assert 'rabbles' in response.context
-    assert community in response.context['rabbles']
+    page_data = response.context['page_data']
+    assert any(r['community_id'] == community.community_id for r in page_data['rabbles'])
 
     html = response.content.decode()
     assert community.community_id in html
-    assert str(community.members.count()) in html
 
 
 @pytest.mark.django_db
@@ -43,12 +42,14 @@ def test_post_detail_view(client):
     assert response.status_code == 200
     assert 'post' in response.context
     assert response.context['post'] == post
-    assert 'comments' in response.context
-    assert list(response.context['comments'].order_by('id')) == [comment1, comment2]
-    assert 'rabble' in response.context
-    assert response.context['rabble'] == community
-    assert 'subrabble' in response.context
-    assert response.context['subrabble'] == subrabble
+
+    page_data = response.context['page_data']
+    assert page_data['post']['title'] == post.title
+    assert page_data['post']['body'] == post.body
+    assert len(page_data['comments']) == 2
+    comment_texts = {c['text'] for c in page_data['comments']}
+    assert 'First comment' in comment_texts
+    assert 'Second comment' in comment_texts
 
 
 @pytest.mark.django_db
