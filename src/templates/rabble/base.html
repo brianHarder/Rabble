@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n django_vite %}
     
 <!DOCTYPE html>
 <html lang="en">
@@ -26,10 +26,6 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
-
     <!-- Google Font: Bebas Neue -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
             
@@ -39,20 +35,13 @@
     {% block css %}
     {% endblock css %}
     
-    <!-- jQuery (required for Select2) -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!-- Select2 JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
     <!-- Bootstrap JS -->
     <script defer 
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js" 
             integrity="sha384-YUe2LzesAfftltw+PEaao2tjU/QATaW/rOitAq67e0CT0Zi2VVRL0oC4+gAaeBKu" 
             crossorigin="anonymous"></script>
 
-    <!-- This file stores project-specific JavaScript -->
-    <script defer src="{% static 'js/rabble.js' %}"></script>
+    {% vite_hmr_client %}
 
     {% block javascript %}
     {% endblock javascript %}
@@ -81,7 +70,6 @@
     <main class="main-content">
       <div class="container-fluid px-4">
         {% block content %}
-        <!-- Page-specific content goes here -->
         {% endblock %}
       </div>
     </main>
