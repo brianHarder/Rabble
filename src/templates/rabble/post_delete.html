@@ -1,19 +1,13 @@
 {% extends "rabble/base.html" %}
+{% load django_vite %}
 
-{% block title %}
-  Confirm Delete
-{% endblock %}
+{% block title %}Confirm Delete{% endblock %}
 
 {% block content %}
-  <div class="text-center">
-    <h2>Are you sure you want to delete this post?</h2>
-    <p class="mt-4"><strong>Title:</strong> {{ post.title|default:"(No Title)" }}</p>
-    <p><strong>Body:</strong> {{ post.body|linebreaksbr }}</p>
+<div id="app"></div>
+{{ page_data|json_script:"page-data" }}
+{% endblock %}
 
-    <form method="post" class="mt-4 d-inline-block">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Yes, delete</button>
-      <a href="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id post.pk %}" class="btn btn-secondary ms-2">Cancel</a>
-    </form>
-  </div>
+{% block javascript %}
+{% vite_asset 'src/entries/delete-confirm.js' %}
 {% endblock %}

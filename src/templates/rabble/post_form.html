@@ -1,62 +1,15 @@
 {% extends "rabble/base.html" %}
-{% load static %}
+{% load django_vite %}
 
 {% block title %}
   {% if form.instance.pk %}Edit Post{% else %}New Post{% endif %}
 {% endblock %}
 
 {% block content %}
-  <h2>
-    {% if form.instance.pk %}
-      Edit Post
-    {% else %}
-      New Post in !{{ subrabble.subrabble_community_id }}
-    {% endif %}
-  </h2>
+<div id="app"></div>
+{{ page_data|json_script:"page-data" }}
+{% endblock %}
 
-  <form method="post" class="mt-4" id="post-form"
-    {% if form.instance.pk %}
-    data-edit-url="{% url 'api-post-editor' rabble.community_id subrabble.subrabble_community_id form.instance.pk %}"
-    data-success-url="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id form.instance.pk %}"
-    {% endif %}>
-
-    {% if form.instance.pk %}
-      <script src="{% static 'js/edit-pages.js' %}"></script>
-    {% endif %}
-    
-    {% csrf_token %}
-
-    <div class="mb-3">
-      {{ form.title.label_tag }}
-      {{ form.title }}
-      {{ form.title.errors }}
-    </div>
-
-    <div class="mb-3">
-      {{ form.body.label_tag }}
-      {{ form.body }}
-      {{ form.body.errors }}
-    </div>
-
-    {% if subrabble.allow_anonymous %}
-    <div class="mb-3">
-      <div class="form-check d-flex align-items-center">
-        {{ form.anonymous }}
-        <label class="form-check-label ms-2">
-          {{ form.anonymous.label }}
-        </label>
-      </div>
-      {{ form.anonymous.errors }}
-    </div>
-    {% endif %}
-
-    <button type="submit" class="btn btn-login">
-      {% if form.instance.pk %}Save Changes{% else %}Create Post{% endif %}
-    </button>
-    {% if form.instance.pk %}
-      <a href="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id form.instance.pk %}" class="btn btn-secondary ms-2">Cancel</a>
-    {% else %}
-      <a href="{% url 'subrabble-detail' rabble.community_id subrabble.subrabble_community_id %}" class="btn btn-secondary ms-2">Cancel</a>
-    {% endif %}
-  </form>
+{% block javascript %}
+{% vite_asset 'src/entries/post-form.js' %}
 {% endblock %}

@@ -1,115 +1,13 @@
 {% extends "rabble/base.html" %}
-{% load static %}
+{% load django_vite %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<div class="mb-4 d-flex justify-content-between align-items-center">
-    <a href="{% url 'subrabble-detail' rabble.community_id subrabble.subrabble_community_id %}" class="text-decoration-none text-muted">
-        ← Back to !{{ subrabble.subrabble_community_id }} — {{ subrabble.subrabble_name }}
-    </a>
-</div>
+<div id="app"></div>
+{{ page_data|json_script:"page-data" }}
+{% endblock %}
 
-<div class="mb-4">
-    <h2>{{ post.title }}</h2>
-    {% if post.anonymous %}
-        <p class="text-muted">By anonymous</p>
-    {% else %}
-        <p class="text-muted">By {{ post.user_id.username }}</p>
-    {% endif %}
-    <p>{{ post.body }}</p>
-
-    <div class="d-flex justify-content-between align-items-center gap-3 mt-4">
-        <div class="d-flex align-items-center gap-3">
-            <button
-                id="like-btn"
-                data-like-url="{% url 'post-likes' rabble.community_id subrabble.subrabble_community_id post.pk %}"
-                data-username="{{ user.username }}"
-                {% if not user.is_authenticated %}disabled title="Log in to like"{% endif %}
-                data-liked="{{ liked|yesno:'True,False' }}"
-                class="btn btn-light p-0 border-0"
-            >
-                <i class="bi bi-hand-thumbs-up-fill"></i>
-                <span id="like-count">{{ post.post_likes.count }}</span>
-            </button>
-            <span>💬 {{ post.comment_set.count }}</span>
-        </div>
-        {% if user.is_authenticated and user == post.user_id %}
-        <div class="d-flex align-items-center gap-3 ms-auto">
-            <a href="{% url 'post-edit' rabble.community_id subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm">
-                Edit Post
-            </a>
-            <a href="{% url 'post-delete' rabble.community_id subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-danger btn-sm">
-                Delete Post
-            </a>
-        </div>
-        {% endif %}
-    </div>
-    
-</div>
-
-<hr>
-
-<div class="d-flex justify-content-between align-items-center mb-2">
-    <h4>Comments</h4>
-    <a href="{% url 'comment-create' rabble.community_id subrabble.subrabble_community_id post.pk %}" class="btn btn-outline-secondary btn-sm">
-        New Comment
-    </a>
-</div>
-
-{% if post.comment_set.count > 0 %}
-    <ul class="list-group mb-3">
-        {% for comment in comments %}
-            <li class="list-group-item">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p>{{ comment.text }}</p>
-                        <div class="d-flex align-items-center gap-3">
-                            {% if comment.anonymous %}
-                                <small class="text-muted">By anonymous</small>
-                            {% else %}
-                                <small class="text-muted">By {{ comment.user_id.username }}</small>
-                            {% endif %}
-                            <button
-                                class="btn btn-light p-0 border-0 comment-like-btn"
-                                data-like-url="{% url 'comment-likes' rabble.community_id subrabble.subrabble_community_id post.pk comment.pk %}"
-                                data-username="{{ user.username }}"
-                                data-comment-id="{{ comment.pk }}"
-                                {% if not user.is_authenticated %}disabled title="Log in to like"{% endif %}
-                                data-liked="{{ comment.user_has_liked|yesno:'True,False' }}"
-                            >
-                                <i class="bi bi-hand-thumbs-up-fill"></i>
-                                <span class="comment-like-count">{{ comment.like_count }}</span>
-                            </button>
-                            <button
-                                class="btn btn-light p-0 border-0 comment-dislike-btn"
-                                data-dislike-url="{% url 'comment-dislikes' rabble.community_id subrabble.subrabble_community_id post.pk comment.pk %}"
-                                data-username="{{ user.username }}"
-                                data-comment-id="{{ comment.pk }}"
-                                {% if not user.is_authenticated %}disabled title="Log in to dislike"{% endif %}
-                                data-disliked="{{ comment.user_has_disliked|yesno:'True,False' }}"
-                            >
-                                <i class="bi bi-hand-thumbs-down-fill"></i>
-                                <span class="comment-dislike-count">{{ comment.dislike_count }}</span>
-                            </button>
-                        </div>
-                    </div>
-                    {% if user.is_authenticated and user == comment.user_id %}
-                        <div class="d-flex flex-column gap-1 ms-3">
-                            <a href="{% url 'comment-edit' rabble.community_id subrabble.subrabble_community_id post.pk comment.pk %}" class="btn btn-outline-secondary btn-sm">
-                                Edit
-                            </a>
-                            <a href="{% url 'comment-delete' rabble.community_id subrabble.subrabble_community_id post.pk comment.pk %}" class="btn btn-outline-secondary btn-sm">
-                                Delete
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No comments yet. Be the first to comment!</p>
-{% endif %}
-
+{% block javascript %}
+{% vite_asset 'src/entries/post-detail.js' %}
 {% endblock %}
