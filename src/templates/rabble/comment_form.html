@@ -1,55 +1,15 @@
 {% extends "rabble/base.html" %}
-{% load static %}
+{% load django_vite %}
 
 {% block title %}
   {% if form.instance.pk %}Edit Comment{% else %}New Comment{% endif %}
 {% endblock %}
 
 {% block content %}
-  <h2>
-    {% if form.instance.pk %}
-      Edit Comment
-    {% else %}
-      New Comment on "{{ post.title }}"
-    {% endif %}
-  </h2>
+<div id="app"></div>
+{{ page_data|json_script:"page-data" }}
+{% endblock %}
 
-  <form method="post" class="mt-4" id="comment-form"
-    {% if form.instance.pk %}
-    data-edit-url="{% url 'api-comment-editor' rabble.community_id subrabble.subrabble_community_id post.pk form.instance.pk %}"
-    data-success-url="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id post.pk %}"
-    {% endif %}>
-
-    {% if form.instance.pk %}
-      <script src="{% static 'js/edit-pages.js' %}"></script>
-    {% endif %}
-    
-    {% csrf_token %}
-
-    <div class="mb-3">
-      {{ form.text.label_tag }}
-      {{ form.text }}
-      {{ form.text.errors }}
-    </div>
-
-    {% if subrabble.allow_anonymous %}
-    <div class="mb-3">
-      <div class="form-check d-flex align-items-center">
-        {{ form.anonymous }}
-        <label class="form-check-label ms-2">
-          {{ form.anonymous.label }}
-        </label>
-      </div>
-      {{ form.anonymous.errors }}
-    </div>
-    {% endif %}
-
-    <button type="submit" class="btn btn-login">
-      {% if form.instance.pk %}Save Changes{% else %}Add Comment{% endif %}
-    </button>
-    <a href="{% url 'post-detail' rabble.community_id subrabble.subrabble_community_id post.pk %}"
-       class="btn btn-secondary ms-2">
-      Cancel
-    </a>
-  </form>
+{% block javascript %}
+{% vite_asset 'src/entries/comment-form.js' %}
 {% endblock %}
