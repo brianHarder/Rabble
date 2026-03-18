@@ -15,8 +15,7 @@ Rabble is a web application where people organize themselves into communities ba
 
  ### Backend & Frontend
 - Django (Python)
-- JavaScript
-- HTML
+- Vue.js
 - Bootstrap
 
 ### Deployment
